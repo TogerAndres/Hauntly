@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: mc-desk-api
+    env: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: AGENT_SHARED_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGIN
+        sync: false

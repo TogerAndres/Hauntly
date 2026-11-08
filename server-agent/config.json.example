@@ -1,0 +1,9 @@
+{
+  "backend_url": "https://mc-desk-api.onrender.com",
+  "claim_code": "MC-DESK-8F42-X92K",
+  "agent_token": "",
+  "server_software": "Paper",
+  "server_version": "1.21.4",
+  "screen_session": "minecraft",
+  "poll_interval_seconds": 5
+}
