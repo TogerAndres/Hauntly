@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" width="100%" height="100%">
+  <defs>
+    <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+    </marker>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="340" rx="14" fill="#090d16" stroke="#1e293b" stroke-width="1.5" />
+
+  <text x="480" y="42" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="16" font-weight="800" text-anchor="middle">Flujo de Arquitectura y Comunicación de MC-Desk</text>
+
+  <!-- Box 1: Frontend -->
+  <g transform="translate(30, 70)">
+    <rect x="0" y="0" width="200" height="240" rx="10" fill="url(#boxGrad)" stroke="#38bdf8" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#0284c7" fill-opacity="0.3" />
+    <text x="28" y="33" font-size="14" text-anchor="middle">🌐</text>
+    <text x="50" y="32" fill="#38bdf8" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">Frontend Web</text>
+    <text x="16" y="60" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• React 18 + Vite SPA</text>
+    <text x="16" y="80" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• HUD de Jugador en Vivo</text>
+    <text x="16" y="100" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Tienda MineMarket ($ COP)</text>
+    <text x="16" y="120" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Gestor de Gamemode</text>
+    <text x="16" y="140" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Consola interactiva</text>
+    <text x="16" y="160" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Springs Emil Kowalski</text>
+    <rect x="16" y="195" width="168" height="26" rx="4" fill="#0369a1" />
+    <text x="100" y="212" fill="#ffffff" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">Despliegue: VERCEL</text>
+  </g>
+
+  <!-- Connector 1 -> 2 -->
+  <path d="M 230 180 L 268 180" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="250" y="170" fill="#38bdf8" font-family="monospace" font-size="9" text-anchor="middle">HTTPS</text>
+
+  <!-- Box 2: Backend API -->
+  <g transform="translate(270, 70)">
+    <rect x="0" y="0" width="200" height="240" rx="10" fill="url(#boxGrad)" stroke="#10b981" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#059669" fill-opacity="0.3" />
+    <text x="28" y="33" font-size="14" text-anchor="middle">⚡</text>
+    <text x="50" y="32" fill="#10b981" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">API Backend</text>
+    <text x="16" y="60" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Node.js + Express REST</text>
+    <text x="16" y="80" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Auth JWT &amp; Role RBAC</text>
+    <text x="16" y="100" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Catálogo &amp; Entrega Items</text>
+    <text x="16" y="120" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Cola de Comandos Segura</text>
+    <text x="16" y="140" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Rate Limiting &amp; Helmet</text>
+    <text x="16" y="160" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• SSH Mux Master Bridge</text>
+    <rect x="16" y="195" width="168" height="26" rx="4" fill="#047857" />
+    <text x="100" y="212" fill="#ffffff" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">Despliegue: RENDER</text>
+  </g>
+
+  <!-- Connector 2 -> 3 (Database / Supabase) -->
+  <path d="M 470 125 L 508 125" stroke="#10b981" stroke-width="2" marker-end="url(#arrowGreen)" />
+  <text x="490" y="115" fill="#10b981" font-family="monospace" font-size="9" text-anchor="middle">SQL</text>
+
+  <!-- Box 3: Database -->
+  <g transform="translate(510, 70)">
+    <rect x="0" y="0" width="180" height="110" rx="10" fill="url(#boxGrad)" stroke="#a78bfa" stroke-width="1.5" />
+    <circle cx="24" cy="24" r="12" fill="#6d28d9" fill-opacity="0.3" />
+    <text x="24" y="28" font-size="12" text-anchor="middle">🗄️</text>
+    <text x="44" y="28" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="12" font-weight="800">Base de Datos</text>
+    <text x="14" y="52" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="9">• PostgreSQL en Supabase</text>
+    <text x="14" y="68" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="9">• In-Memory Mock Dev</text>
+    <text x="14" y="84" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="9">• Auditoría &amp; Transacciones</text>
+  </g>
+
+  <!-- Connector 2 -> 4 (Server Agent / SSH) -->
+  <path d="M 470 235 L 728 235" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="590" y="225" fill="#38bdf8" font-family="monospace" font-size="9" text-anchor="middle">SSH MUX / WSS POLL</text>
+
+  <!-- Box 4: Server Agent & Minecraft Host -->
+  <g transform="translate(730, 70)">
+    <rect x="0" y="0" width="200" height="240" rx="10" fill="url(#boxGrad)" stroke="#f59e0b" stroke-width="1.5" />
+    <circle cx="28" cy="28" r="14" fill="#b45309" fill-opacity="0.3" />
+    <text x="28" y="33" font-size="14" text-anchor="middle">⛏️</text>
+    <text x="50" y="32" fill="#f59e0b" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">Minecraft Host</text>
+    <text x="16" y="60" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• Python 3 Server Daemon</text>
+    <text x="16" y="80" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• GNU Screen Session</text>
+    <text x="16" y="100" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• latest.log &amp; debug.log</text>
+    <text x="16" y="120" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• NBT playerdata reader</text>
+    <text x="16" y="140" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• mc-backup tar.gz</text>
+    <text x="16" y="160" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">• MCSleepingServerStarter</text>
+    <rect x="16" y="195" width="168" height="26" rx="4" fill="#b45309" />
+    <text x="100" y="212" fill="#ffffff" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">Linux VPS / Servidor</text>
+  </g>
+</svg>

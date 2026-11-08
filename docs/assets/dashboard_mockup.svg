@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95" />
+    </linearGradient>
+    <linearGradient id="gengarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#4c1d95" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Window Frame -->
+  <rect x="10" y="10" width="940" height="540" rx="14" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="1.5" filter="url(#shadow)" />
+
+  <!-- Window Top Bar -->
+  <path d="M 10 24 C 10 16 16 10 24 10 L 936 10 C 944 10 950 16 950 24 L 950 48 L 10 48 Z" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+  <circle cx="34" cy="29" r="6" fill="#ef4444" />
+  <circle cx="54" cy="29" r="6" fill="#f59e0b" />
+  <circle cx="74" cy="29" r="6" fill="#10b981" />
+  <text x="480" y="33" fill="#94a3b8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" text-anchor="middle">MC-Desk — Minecraft Server Control &amp; Telemetry HUD</text>
+
+  <!-- Sidebar -->
+  <rect x="10" y="48" width="210" height="502" fill="#090d16" stroke="#1e293b" stroke-width="1" />
+  
+  <!-- Logo / Mascot Header -->
+  <g transform="translate(26, 68)">
+    <circle cx="20" cy="20" r="18" fill="url(#gengarGrad)" />
+    <!-- Stylized Gengar Eyes -->
+    <path d="M 13 15 L 18 18 L 13 20 Z" fill="#ef4444" />
+    <path d="M 27 15 L 22 18 L 27 20 Z" fill="#ef4444" />
+    <path d="M 14 24 Q 20 28 26 24" stroke="#ffffff" stroke-width="1.5" fill="none" />
+    <text x="48" y="18" fill="#f8fafc" font-family="monospace" font-size="14" font-weight="800" letter-spacing="1">MC-DESK</text>
+    <text x="48" y="30" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="9" font-weight="600">v1.2.0 • FORGE 1.20.1</text>
+  </g>
+
+  <!-- Nav Items -->
+  <g transform="translate(22, 126)">
+    <!-- Active Nav: Panel & HUD -->
+    <rect x="0" y="0" width="186" height="36" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.4" />
+    <text x="14" y="23" fill="#38bdf8" font-family="-apple-system, sans-serif" font-size="12" font-weight="700">📊 Métricas &amp; HUD</text>
+
+    <!-- Nav 2: MineMarket -->
+    <rect x="0" y="44" width="186" height="34" rx="8" fill="transparent" />
+    <text x="14" y="66" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="12" font-weight="600">🛒 MineMarket Tienda</text>
+
+    <!-- Nav 3: Gamemode -->
+    <rect x="0" y="86" width="186" height="34" rx="8" fill="transparent" />
+    <text x="14" y="108" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="12" font-weight="600">🎮 Modos de Juego</text>
+
+    <!-- Nav 4: Consola -->
+    <rect x="0" y="128" width="186" height="34" rx="8" fill="transparent" />
+    <text x="14" y="150" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="12" font-weight="600">💻 Consola RCON</text>
+
+    <!-- Nav 5: Backups -->
+    <rect x="0" y="170" width="186" height="34" rx="8" fill="transparent" />
+    <text x="14" y="192" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="12" font-weight="600">💾 Backups del Mundo</text>
+
+    <!-- Nav 6: Config -->
+    <rect x="0" y="212" width="186" height="34" rx="8" fill="transparent" />
+    <text x="14" y="234" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="12" font-weight="600">⚙️ server.properties</text>
+  </g>
+
+  <!-- Server Bridge Status Card in Sidebar -->
+  <g transform="translate(22, 440)">
+    <rect x="0" y="0" width="186" height="90" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+    <circle cx="16" cy="18" r="4" fill="#10b981" />
+    <text x="26" y="22" fill="#10b981" font-family="monospace" font-size="10" font-weight="700">SSH BRIDGE ACTIVO</text>
+    <text x="14" y="44" fill="#94a3b8" font-family="monospace" font-size="10">Host: 127.0.0.1</text>
+    <text x="14" y="60" fill="#94a3b8" font-family="monospace" font-size="10">Latencia: 14ms</text>
+    <text x="14" y="76" fill="#a78bfa" font-family="monospace" font-size="9">Screen: 'minecraft'</text>
+  </g>
+
+  <!-- Main Content Area -->
+  <!-- Top Status Banner -->
+  <g transform="translate(236, 62)">
+    <rect x="0" y="0" width="700" height="52" rx="10" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    <circle cx="24" cy="26" r="6" fill="#10b981" />
+    <text x="40" y="30" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="14" font-weight="700">🟢 ONLINE — Servidor Activo (Forge 1.20.1)</text>
+    
+    <rect x="520" y="13" width="164" height="26" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1" />
+    <text x="602" y="30" fill="#38bdf8" font-family="monospace" font-size="11" font-weight="600" text-anchor="middle">mc.tudominio.com:25565</text>
+  </g>
+
+  <!-- 4 Telemetry Cards Grid -->
+  <g transform="translate(236, 126)">
+    <!-- Card 1: TPS -->
+    <rect x="0" y="0" width="166" height="74" rx="8" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    <text x="16" y="22" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">TICKS / SEGUNDO</text>
+    <text x="16" y="48" fill="#10b981" font-family="monospace" font-size="20" font-weight="800">20.0 <tspan font-size="12" fill="#64748b">/ 20</tspan></text>
+    <text x="16" y="64" fill="#10b981" font-family="-apple-system, sans-serif" font-size="9" font-weight="600">⚡ Rendimiento 100%</text>
+
+    <!-- Card 2: RAM -->
+    <rect x="178" y="0" width="166" height="74" rx="8" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    <text x="194" y="22" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">MEMORIA RAM</text>
+    <text x="194" y="48" fill="#38bdf8" font-family="monospace" font-size="20" font-weight="800">4.2 <tspan font-size="12" fill="#64748b">/ 8.0 GB</tspan></text>
+    <text x="194" y="64" fill="#38bdf8" font-family="-apple-system, sans-serif" font-size="9" font-weight="600">📊 52.5% Utilizada</text>
+
+    <!-- Card 3: CPU -->
+    <rect x="356" y="0" width="166" height="74" rx="8" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    <text x="372" y="22" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">CARGA DE CPU</text>
+    <text x="372" y="48" fill="#a78bfa" font-family="monospace" font-size="20" font-weight="800">24.8%</text>
+    <text x="372" y="64" fill="#a78bfa" font-family="-apple-system, sans-serif" font-size="9" font-weight="600">🌡️ Temp: 58.2°C</text>
+
+    <!-- Card 4: Jugadores -->
+    <rect x="534" y="0" width="166" height="74" rx="8" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    <text x="550" y="22" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">JUGADORES ONLINE</text>
+    <text x="550" y="48" fill="#f59e0b" font-family="monospace" font-size="20" font-weight="800">7 <tspan font-size="12" fill="#64748b">/ 20</tspan></text>
+    <text x="550" y="64" fill="#f59e0b" font-family="-apple-system, sans-serif" font-size="9" font-weight="600">👥 18 Hoy</text>
+  </g>
+
+  <!-- Left: Player Profile & HUD Inspection -->
+  <g transform="translate(236, 212)">
+    <rect x="0" y="0" width="410" height="318" rx="10" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    
+    <!-- Player Header -->
+    <rect x="16" y="16" width="38" height="38" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <!-- Steve Avatar outline -->
+    <circle cx="35" cy="35" r="14" fill="#3b82f6" />
+    <text x="64" y="32" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="14" font-weight="800">Steve</text>
+    <rect x="110" y="20" width="56" height="18" rx="4" fill="#4c1d95" />
+    <text x="138" y="32" fill="#c4b5fd" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">ADMIN</text>
+    <text x="64" y="46" fill="#94a3b8" font-family="monospace" font-size="10">Nivel 42 • 14,250 XP • Ping: 18ms</text>
+
+    <!-- Hearts Bar (Pixel Style) -->
+    <g transform="translate(16, 68)">
+      <text x="0" y="10" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="10" font-weight="700">SALUD (20/20):</text>
+      <g transform="translate(90, 0)">
+        <text x="0" y="10" fill="#ef4444" font-size="14">❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️</text>
+      </g>
+    </g>
+
+    <!-- Food Bar -->
+    <g transform="translate(16, 94)">
+      <text x="0" y="10" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="10" font-weight="700">HAMBRE (18/20):</text>
+      <g transform="translate(90, 0)">
+        <text x="0" y="10" fill="#f59e0b" font-size="14">🍗🍗🍗🍗🍗🍗🍗🍗🍗</text>
+      </g>
+    </g>
+
+    <!-- Inventory Grid -->
+    <text x="16" y="142" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="11" font-weight="700">INVENTARIO EN VIVO</text>
+    
+    <!-- 9 Slots Hotbar -->
+    <g transform="translate(16, 154)">
+      <!-- 9 boxes -->
+      <rect x="0" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="19" y="24" font-size="16" text-anchor="middle">🗡️</text>
+      <text x="32" y="34" font-size="9" fill="#e2e8f0" font-family="monospace">1</text>
+
+      <rect x="42" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="61" y="24" font-size="16" text-anchor="middle">🏹</text>
+      <text x="74" y="34" font-size="9" fill="#e2e8f0" font-family="monospace">1</text>
+
+      <rect x="84" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="103" y="24" font-size="16" text-anchor="middle">⛏️</text>
+      <text x="116" y="34" font-size="9" fill="#e2e8f0" font-family="monospace">1</text>
+
+      <rect x="126" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="145" y="24" font-size="16" text-anchor="middle">🍎</text>
+      <text x="156" y="34" font-size="9" fill="#fbbf24" font-family="monospace">64</text>
+
+      <rect x="168" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="187" y="24" font-size="16" text-anchor="middle">🥩</text>
+      <text x="198" y="34" font-size="9" fill="#fbbf24" font-family="monospace">32</text>
+
+      <rect x="210" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="229" y="24" font-size="16" text-anchor="middle">🛡️</text>
+
+      <rect x="252" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="271" y="24" font-size="16" text-anchor="middle">💎</text>
+      <text x="282" y="34" font-size="9" fill="#38bdf8" font-family="monospace">16</text>
+
+      <rect x="294" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="313" y="24" font-size="16" text-anchor="middle">🧪</text>
+      <text x="326" y="34" font-size="9" fill="#e2e8f0" font-family="monospace">3</text>
+
+      <rect x="336" y="0" width="38" height="38" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+      <text x="355" y="24" font-size="16" text-anchor="middle">📦</text>
+      <text x="366" y="34" font-size="9" fill="#e2e8f0" font-family="monospace">4</text>
+    </g>
+
+    <!-- Player Actions Button Row -->
+    <g transform="translate(16, 252)">
+      <rect x="0" y="0" width="118" height="32" rx="6" fill="#10b981" />
+      <text x="59" y="20" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">🎮 Gamemode</text>
+
+      <rect x="126" y="0" width="118" height="32" rx="6" fill="#3b82f6" />
+      <text x="185" y="20" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">🎁 Entregar Item</text>
+
+      <rect x="252" y="0" width="124" height="32" rx="6" fill="#dc2626" />
+      <text x="314" y="20" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">⚠️ Expulsar</text>
+    </g>
+  </g>
+
+  <!-- Right: Connected Players List & Quick Actions -->
+  <g transform="translate(660, 212)">
+    <rect x="0" y="0" width="276" height="318" rx="10" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1" />
+    <text x="16" y="26" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="13" font-weight="700">JUGADORES CONECTADOS (7)</text>
+
+    <!-- Player List Items -->
+    <g transform="translate(16, 42)">
+      <!-- P1 -->
+      <rect x="0" y="0" width="244" height="36" rx="6" fill="#1e293b" />
+      <circle cx="18" cy="18" r="10" fill="#3b82f6" />
+      <text x="36" y="18" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="11" font-weight="700">Steve</text>
+      <text x="36" y="28" fill="#94a3b8" font-family="monospace" font-size="9">Admin • 18ms</text>
+      <circle cx="230" cy="18" r="4" fill="#10b981" />
+
+      <!-- P2 -->
+      <rect x="0" y="42" width="244" height="36" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+      <circle cx="18" cy="60" r="10" fill="#8b5cf6" />
+      <text x="36" y="60" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">Alex_Builder</text>
+      <text x="36" y="70" fill="#94a3b8" font-family="monospace" font-size="9">VIP+ • 32ms</text>
+      <circle cx="230" cy="60" r="4" fill="#10b981" />
+
+      <!-- P3 -->
+      <rect x="0" y="84" width="244" height="36" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+      <circle cx="18" cy="102" r="10" fill="#f59e0b" />
+      <text x="36" y="102" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">CreeperHunter</text>
+      <text x="36" y="112" fill="#94a3b8" font-family="monospace" font-size="9">Usuario • 45ms</text>
+      <circle cx="230" cy="102" r="4" fill="#10b981" />
+
+      <!-- P4 -->
+      <rect x="0" y="126" width="244" height="36" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+      <circle cx="18" cy="144" r="10" fill="#10b981" />
+      <text x="36" y="144" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">DiamondMiner</text>
+      <text x="36" y="154" fill="#94a3b8" font-family="monospace" font-size="9">Usuario • 22ms</text>
+      <circle cx="230" cy="144" r="4" fill="#10b981" />
+    </g>
+
+    <!-- Quick Server Controls -->
+    <g transform="translate(16, 224)">
+      <rect x="0" y="0" width="244" height="80" rx="8" fill="#0b0f19" stroke="#1e293b" stroke-width="1" />
+      <text x="12" y="18" fill="#94a3b8" font-family="monospace" font-size="10" font-weight="700">ACCIONES RÁPIDAS</text>
+      <rect x="12" y="30" width="104" height="26" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1" />
+      <text x="64" y="47" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">💾 Crear Backup</text>
+      <rect x="126" y="30" width="104" height="26" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1" />
+      <text x="178" y="47" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="10" font-weight="600" text-anchor="middle">⚡ Despertar Server</text>
+      <text x="12" y="70" fill="#64748b" font-family="monospace" font-size="9">Último backup: hace 18 min (480 MB)</text>
+    </g>
+  </g>
+</svg>

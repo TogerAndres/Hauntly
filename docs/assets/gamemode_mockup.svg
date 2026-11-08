@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="cardGm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="activeGm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="420" rx="14" fill="url(#bgGm)" stroke="#1e293b" stroke-width="1.5" />
+
+  <!-- Header -->
+  <g transform="translate(36, 32)">
+    <rect x="0" y="0" width="36" height="36" rx="8" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" stroke-width="1.5" />
+    <text x="18" y="24" font-size="20" text-anchor="middle">🎮</text>
+    <text x="48" y="20" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="18" font-weight="800">Gestión de Modos de Juego</text>
+    <text x="48" y="34" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">Asigna o cambia el modo de juego de los jugadores del servidor al instante</text>
+
+    <!-- Server Host Pill -->
+    <rect x="730" y="6" width="154" height="26" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1" />
+    <circle cx="746" cy="19" r="4" fill="#10b981" />
+    <text x="758" y="23" fill="#cbd5e1" font-family="monospace" font-size="10">mc.tudominio.com</text>
+  </g>
+
+  <!-- Step 1: Select Player -->
+  <g transform="translate(36, 88)">
+    <circle cx="10" cy="10" r="10" fill="#0284c7" />
+    <text x="10" y="14" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" text-anchor="middle">1</text>
+    <text x="28" y="14" fill="#e2e8f0" font-family="-apple-system, sans-serif" font-size="13" font-weight="700">Selecciona un jugador:</text>
+
+    <!-- Player Select Box -->
+    <rect x="0" y="26" width="888" height="44" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
+    <circle cx="28" cy="48" r="12" fill="#3b82f6" />
+    <text x="48" y="48" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="13" font-weight="700">Steve</text>
+    <rect x="92" y="38" width="56" height="20" rx="4" fill="#4c1d95" />
+    <text x="120" y="52" fill="#e9d5ff" font-family="monospace" font-size="9" font-weight="700" text-anchor="middle">ADMIN</text>
+    <text x="160" y="51" fill="#10b981" font-family="monospace" font-size="11">● Online (Nivel 42 • 18ms)</text>
+    <text x="860" y="52" fill="#94a3b8" font-size="12">▼</text>
+  </g>
+
+  <!-- Step 2: Choose Gamemode (4 Cards) -->
+  <g transform="translate(36, 178)">
+    <circle cx="10" cy="10" r="10" fill="#0284c7" />
+    <text x="10" y="14" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="800" text-anchor="middle">2</text>
+    <text x="28" y="14" fill="#e2e8f0" font-family="-apple-system, sans-serif" font-size="13" font-weight="700">Selecciona el modo a aplicar:</text>
+
+    <!-- 4 Cards -->
+    <!-- Card 1: Survival -->
+    <g transform="translate(0, 26)">
+      <rect x="0" y="0" width="210" height="110" rx="10" fill="url(#cardGm)" stroke="#334155" stroke-width="1" />
+      <circle cx="32" cy="32" r="18" fill="#ef4444" fill-opacity="0.15" />
+      <text x="32" y="38" font-size="20" text-anchor="middle">🏕️</text>
+      <text x="60" y="36" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">Supervivencia</text>
+      <text x="16" y="68" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">Modo clásico estándar con salud, hambre y daño.</text>
+      <text x="16" y="94" fill="#64748b" font-family="monospace" font-size="9">/gamemode survival</text>
+    </g>
+
+    <!-- Card 2: Creative (Selected) -->
+    <g transform="translate(226, 26)">
+      <rect x="0" y="0" width="210" height="110" rx="10" fill="url(#activeGm)" stroke="#10b981" stroke-width="2" />
+      <circle cx="32" cy="32" r="18" fill="#10b981" fill-opacity="0.3" />
+      <text x="32" y="38" font-size="20" text-anchor="middle">🎨</text>
+      <text x="60" y="36" fill="#6ee7b7" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">Creativo ✓</text>
+      <text x="16" y="68" fill="#a7f3d0" font-family="-apple-system, sans-serif" font-size="10">Vuelo ilimitado, bloques infinitos y sin daño de mobs.</text>
+      <text x="16" y="94" fill="#34d399" font-family="monospace" font-size="9">/gamemode creative</text>
+    </g>
+
+    <!-- Card 3: Adventure -->
+    <g transform="translate(452, 26)">
+      <rect x="0" y="0" width="210" height="110" rx="10" fill="url(#cardGm)" stroke="#334155" stroke-width="1" />
+      <circle cx="32" cy="32" r="18" fill="#f59e0b" fill-opacity="0.15" />
+      <text x="32" y="38" font-size="20" text-anchor="middle">🗺️</text>
+      <text x="60" y="36" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">Aventura</text>
+      <text x="16" y="68" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">Los bloques no se destruyen sin herramientas asignadas.</text>
+      <text x="16" y="94" fill="#64748b" font-family="monospace" font-size="9">/gamemode adventure</text>
+    </g>
+
+    <!-- Card 4: Spectator -->
+    <g transform="translate(678, 26)">
+      <rect x="0" y="0" width="210" height="110" rx="10" fill="url(#cardGm)" stroke="#334155" stroke-width="1" />
+      <circle cx="32" cy="32" r="18" fill="#8b5cf6" fill-opacity="0.15" />
+      <text x="32" y="38" font-size="20" text-anchor="middle">👻</text>
+      <text x="60" y="36" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="13" font-weight="800">Espectador</text>
+      <text x="16" y="68" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="10">Invisibilidad total, noclip para atravesar paredes y terreno.</text>
+      <text x="16" y="94" fill="#64748b" font-family="monospace" font-size="9">/gamemode spectator</text>
+    </g>
+  </g>
+
+  <!-- Step 3: Action Trigger Button -->
+  <g transform="translate(36, 342)">
+    <rect x="0" y="0" width="888" height="48" rx="8" fill="#10b981" />
+    <text x="444" y="29" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="14" font-weight="800" text-anchor="middle">⚡ Aplicar Modo CREATIVO a Steve al Instante</text>
+  </g>
+</svg>

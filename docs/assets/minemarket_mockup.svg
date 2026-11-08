@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgStore" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="storeCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+
+  <rect x="10" y="10" width="940" height="500" rx="14" fill="url(#bgStore)" stroke="#1e293b" stroke-width="1.5" />
+
+  <!-- Header -->
+  <g transform="translate(36, 32)">
+    <rect x="0" y="0" width="36" height="36" rx="8" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="1.5" />
+    <text x="18" y="24" font-size="20" text-anchor="middle">🛒</text>
+    <text x="48" y="20" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="18" font-weight="800">MineMarket — Tienda Digital Comunitaria</text>
+    <text x="48" y="34" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">Catálogo de rangos, kits y llaves con entrega instantánea in-game mediante comandos de consola</text>
+    
+    <!-- Admin Button -->
+    <rect x="710" y="4" width="144" height="30" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1" />
+    <text x="782" y="23" fill="#38bdf8" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">+ Publicar Artículo</text>
+  </g>
+
+  <!-- Category Pills Row -->
+  <g transform="translate(36, 88)">
+    <!-- Active Pill: Todos -->
+    <rect x="0" y="0" width="80" height="28" rx="14" fill="#10b981" />
+    <text x="40" y="18" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" text-anchor="middle">Todos (12)</text>
+
+    <!-- Pill 2: Rangos -->
+    <rect x="88" y="0" width="94" height="28" rx="14" fill="#111827" stroke="#334155" stroke-width="1" />
+    <text x="135" y="18" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle">👑 Rangos (4)</text>
+
+    <!-- Pill 3: Kits -->
+    <rect x="190" y="0" width="80" height="28" rx="14" fill="#111827" stroke="#334155" stroke-width="1" />
+    <text x="230" y="18" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle">⚔️ Kits (3)</text>
+
+    <!-- Pill 4: Llaves -->
+    <rect x="278" y="0" width="90" height="28" rx="14" fill="#111827" stroke="#334155" stroke-width="1" />
+    <text x="323" y="18" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle">🗝️ Llaves (2)</text>
+
+    <!-- Pill 5: Cosméticos -->
+    <rect x="376" y="0" width="112" height="28" rx="14" fill="#111827" stroke="#334155" stroke-width="1" />
+    <text x="432" y="18" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle">✨ Cosméticos (2)</text>
+
+    <!-- Pill 6: Monedas -->
+    <rect x="496" y="0" width="104" height="28" rx="14" fill="#111827" stroke="#334155" stroke-width="1" />
+    <text x="548" y="18" fill="#cbd5e1" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" text-anchor="middle">🪙 Monedas (1)</text>
+
+    <!-- Search Input -->
+    <rect x="670" y="0" width="218" height="28" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1" />
+    <text x="686" y="18" fill="#64748b" font-family="-apple-system, sans-serif" font-size="11">🔍 Buscar en catálogo...</text>
+  </g>
+
+  <!-- Items Grid (3 Cards Showcase) -->
+  <g transform="translate(36, 134)">
+    <!-- Item 1: Rango VIP -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="282" height="344" rx="10" fill="url(#storeCard)" stroke="#334155" stroke-width="1" />
+      <!-- Image/Icon Box -->
+      <rect x="12" y="12" width="258" height="130" rx="8" fill="#090d16" />
+      <circle cx="141" cy="77" r="32" fill="#8b5cf6" fill-opacity="0.2" />
+      <text x="141" y="87" font-size="38" text-anchor="middle">👑</text>
+      <!-- Category Badge -->
+      <rect x="22" y="22" width="62" height="20" rx="4" fill="#4c1d95" />
+      <text x="53" y="35" fill="#e9d5ff" font-family="monospace" font-size="9" font-weight="700" text-anchor="middle">RANGOS</text>
+
+      <!-- Details -->
+      <text x="16" y="168" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="15" font-weight="800">Rango VIP Mensual</text>
+      <text x="16" y="186" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">Vuelo en lobby, /feed, kit semanal y prefijo dorado en chat.</text>
+
+      <!-- Command Snippet -->
+      <rect x="16" y="202" width="250" height="24" rx="4" fill="#090d16" />
+      <text x="24" y="217" fill="#38bdf8" font-family="monospace" font-size="9">/lp user {player} parent set vip</text>
+
+      <!-- Stock & Price -->
+      <text x="16" y="250" fill="#64748b" font-family="monospace" font-size="10">Stock: <tspan fill="#10b981" font-weight="700">99 disp.</tspan></text>
+      <text x="16" y="278" fill="#10b981" font-family="monospace" font-size="18" font-weight="800">$ 15.000 <tspan font-size="10" fill="#94a3b8">COP</tspan></text>
+
+      <!-- Action Button -->
+      <rect x="16" y="294" width="250" height="36" rx="6" fill="#10b981" />
+      <text x="141" y="316" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle">⚡ Canjear / Entregar</text>
+    </g>
+
+    <!-- Item 2: Kit Diamante -->
+    <g transform="translate(302, 0)">
+      <rect x="0" y="0" width="282" height="344" rx="10" fill="url(#storeCard)" stroke="#334155" stroke-width="1" />
+      <rect x="12" y="12" width="258" height="130" rx="8" fill="#090d16" />
+      <circle cx="141" cy="77" r="32" fill="#0284c7" fill-opacity="0.2" />
+      <text x="141" y="87" font-size="38" text-anchor="middle">⚔️</text>
+      <rect x="22" y="22" width="50" height="20" rx="4" fill="#0369a1" />
+      <text x="47" y="35" fill="#e0f2fe" font-family="monospace" font-size="9" font-weight="700" text-anchor="middle">KITS</text>
+
+      <text x="16" y="168" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="15" font-weight="800">Kit Guerrero Diamante</text>
+      <text x="16" y="186" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">Armadura Protection IV completa, Espada Sharpness V y manzanas doradas.</text>
+
+      <rect x="16" y="202" width="250" height="24" rx="4" fill="#090d16" />
+      <text x="24" y="217" fill="#38bdf8" font-family="monospace" font-size="9">/kit guerrero {player}</text>
+
+      <text x="16" y="250" fill="#64748b" font-family="monospace" font-size="10">Stock: <tspan fill="#10b981" font-weight="700">45 disp.</tspan></text>
+      <text x="16" y="278" fill="#10b981" font-family="monospace" font-size="18" font-weight="800">$ 8.000 <tspan font-size="10" fill="#94a3b8">COP</tspan></text>
+
+      <rect x="16" y="294" width="250" height="36" rx="6" fill="#10b981" />
+      <text x="141" y="316" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle">⚡ Canjear / Entregar</text>
+    </g>
+
+    <!-- Item 3: Llave Mítica -->
+    <g transform="translate(604, 0)">
+      <rect x="0" y="0" width="282" height="344" rx="10" fill="url(#storeCard)" stroke="#334155" stroke-width="1" />
+      <rect x="12" y="12" width="258" height="130" rx="8" fill="#090d16" />
+      <circle cx="141" cy="77" r="32" fill="#d97706" fill-opacity="0.2" />
+      <text x="141" y="87" font-size="38" text-anchor="middle">🗝️</text>
+      <rect x="22" y="22" width="56" height="20" rx="4" fill="#92400e" />
+      <text x="50" y="35" fill="#fef3c7" font-family="monospace" font-size="9" font-weight="700" text-anchor="middle">LLAVES</text>
+
+      <text x="16" y="168" fill="#f8fafc" font-family="-apple-system, sans-serif" font-size="15" font-weight="800">Llave Caja Mítica (x3)</text>
+      <text x="16" y="186" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="11">Oportunidad para conseguir cosméticos legendarios y herramientas Netherite.</text>
+
+      <rect x="16" y="202" width="250" height="24" rx="4" fill="#090d16" />
+      <text x="24" y="217" fill="#38bdf8" font-family="monospace" font-size="9">/crates give {player} mitica 3</text>
+
+      <text x="16" y="250" fill="#64748b" font-family="monospace" font-size="10">Stock: <tspan fill="#10b981" font-weight="700">120 disp.</tspan></text>
+      <text x="16" y="278" fill="#10b981" font-family="monospace" font-size="18" font-weight="800">$ 3.500 <tspan font-size="10" fill="#94a3b8">COP</tspan></text>
+
+      <rect x="16" y="294" width="250" height="36" rx="6" fill="#10b981" />
+      <text x="141" y="316" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle">⚡ Canjear / Entregar</text>
+    </g>
+  </g>
+</svg>
