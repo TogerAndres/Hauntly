@@ -3,6 +3,7 @@ const router = express.Router({ mergeParams: true });
 const db = require('../db');
 const { authenticate, requireRole } = require('../middleware/auth');
 const { logAudit } = require('../services/auditService');
+const { sanitizeConsoleCommand } = require('../middleware/security');
 
 // Verify caller has admin/owner rights on this server
 async function checkServerAdmin(req, res, next) {
@@ -33,9 +34,9 @@ async function checkServerAdmin(req, res, next) {
       }
     } else {
       const s = db.memoryStore.servers.find(srv => srv.id === serverId);
-      if (s && (s.owner_id === userId || req.user.role === 'OWNER')) {
+      if (s && (s.owner_id === userId || req.user.role === 'OWNER' || req.user.role === 'ADMIN')) {
         hasAccess = true;
-        role = 'OWNER';
+        role = req.user.role;
       }
     }
 
@@ -77,40 +78,26 @@ async function runServerCommand(serverId, cmd) {
   return await minecraftBridge.executeRemoteCommand(cmd);
 }
 
-// Forbidden shell control characters to prevent shell injection / breakout
-const FORBIDDEN_SHELL_PATTERNS = /[;&|`$><\\]/;
-
 // 1. Send Command to Console with strict sanitization
 router.post('/command', async (req, res) => {
   const { serverId } = req.params;
   const { command } = req.body;
 
-  if (!command || typeof command !== 'string') {
-    return res.status(400).json({ error: 'Comando requerido' });
-  }
-
-  const cleanCmd = command.trim().replace(/^[/]/, ''); // remove leading slash
-
-  if (cleanCmd.length === 0) {
-    return res.status(400).json({ error: 'El comando no puede estar vacío' });
-  }
-
-  if (cleanCmd.length > 250) {
-    return res.status(400).json({ error: 'Comando demasiado largo (máximo 250 caracteres)' });
-  }
-
-  // Security: Check for forbidden shell metacharacters
-  if (FORBIDDEN_SHELL_PATTERNS.test(cleanCmd)) {
+  // Strict console command sanitization
+  const check = sanitizeConsoleCommand(command);
+  if (!check.isValid) {
     await logAudit({
       serverId,
       userId: req.user.id,
       userEmail: req.user.email,
       action: 'SECURITY_BLOCKED_COMMAND',
-      details: { rejectedCommand: cleanCmd, reason: 'Caracteres de shell inválidos' },
+      details: { rejectedCommand: command, reason: check.error },
       ipAddress: req.ip || req.connection?.remoteAddress
     });
-    return res.status(400).json({ error: 'Comando bloqueado por seguridad: contiene caracteres de shell inválidos (; & | ` $ > < \\)' });
+    return res.status(400).json({ error: check.error });
   }
+
+  const cleanCmd = check.sanitized;
 
   try {
     // Execute live via Agent or Bridge

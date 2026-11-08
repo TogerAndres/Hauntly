@@ -136,7 +136,8 @@ MC-Desk/
 ├── mc-red.py                   # Herramienta de diagnóstico de red, IP pública y túnel Tailscale
 ├── mc-status.py                # Script independiente de inspección de estado de Minecraft
 │
-├── docs/                       # Recursos visuales y documentación
+├── docs/                       # Recursos visuales y documentación técnica
+│   ├── database_schema_3nf.md  # 📘 Arquitectura de Base de Datos en 3NF y Manual de Seguridad
 │   └── assets/
 │       ├── gengar.jpg          # Mascota oficial del proyecto
 │       ├── island.jpg          # Banner artístico de Minecraft
@@ -158,9 +159,10 @@ MC-Desk/
 │       │   └── index.js        # Carga centralizada y segura de variables con dotenv
 │       ├── db/
 │       │   ├── index.js        # Pool de conexión PostgreSQL con fallback a memoria
-│       │   └── schema.sql      # Esquema DDL de tablas (users, servers, items, logs)
+│       │   └── schema.sql      # Esquema DDL en 3NF (13 tablas, vistas, catálogos e índices)
 │       ├── middleware/
-│       │   ├── auth.js         # Verificación de tokens JWT y roles (ADMIN, OWNER)
+│       │   ├── auth.js         # Verificación de tokens JWT con fijación de algoritmos y roles
+│       │   ├── security.js     # Validador de complejidad, anti-timing attack y sanitizador
 │       │   ├── agentAuth.js    # Autenticación segura de daemons de Minecraft
 │       │   └── rateLimiter.js  # Limitador de peticiones contra ataques de fuerza bruta
 │       ├── routes/

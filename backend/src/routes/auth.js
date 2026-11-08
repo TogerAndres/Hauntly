@@ -8,16 +8,11 @@ const { authLimiter } = require('../middleware/rateLimiter');
 const { authenticate } = require('../middleware/auth');
 const { logAudit } = require('../services/auditService');
 const minecraftBridge = require('../services/minecraftBridge');
-
-// Helper to sanitize minecraft username
-function sanitizeMinecraftUsername(name) {
-  if (!name || typeof name !== 'string') return null;
-  const clean = name.trim();
-  if (/^[a-zA-Z0-9_]{2,16}$/.test(clean)) {
-    return clean;
-  }
-  return null;
-}
+const {
+  validatePasswordPolicy,
+  sanitizeMinecraftGamertag,
+  DUMMY_BCRYPT_HASH
+} = require('../middleware/security');
 
 // 1. Register User (Normal Player or Admin)
 router.post('/register', authLimiter, async (req, res) => {
@@ -27,8 +22,13 @@ router.post('/register', authLimiter, async (req, res) => {
     return res.status(400).json({ error: 'Correo, nombre y contraseña son obligatorios' });
   }
 
-  if (password.length < 6) {
-    return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+  // Enterprise Password Complexity Enforcement
+  const passwordCheck = validatePasswordPolicy(password);
+  if (!passwordCheck.valid) {
+    return res.status(400).json({
+      error: 'La contraseña no cumple con las políticas de seguridad requeridas',
+      details: passwordCheck.errors
+    });
   }
 
   const normalizedEmail = email.trim().toLowerCase();
@@ -37,7 +37,7 @@ router.post('/register', authLimiter, async (req, res) => {
 
   // Rule: Regular users MUST be connected to an in-game Minecraft player
   if (normalizedRole === 'USER') {
-    cleanMcUser = sanitizeMinecraftUsername(minecraftUsername || displayName);
+    cleanMcUser = sanitizeMinecraftGamertag(minecraftUsername || displayName);
     if (!cleanMcUser) {
       return res.status(400).json({
         error: 'Los usuarios deben estar conectados a un jugador de Minecraft válido (2 a 16 caracteres alfanuméricos)'
@@ -45,7 +45,7 @@ router.post('/register', authLimiter, async (req, res) => {
     }
   } else {
     // Admins do not require being tied to a player
-    cleanMcUser = sanitizeMinecraftUsername(minecraftUsername);
+    cleanMcUser = sanitizeMinecraftGamertag(minecraftUsername);
   }
 
   try {
@@ -125,7 +125,12 @@ router.post('/register', authLimiter, async (req, res) => {
         minecraftUsername: user.minecraft_username || cleanMcUser
       },
       config.jwtSecret,
-      { expiresIn: config.jwtExpiresIn }
+      {
+        algorithm: 'HS256',
+        issuer: 'mcdesk-api',
+        audience: 'mcdesk-web',
+        expiresIn: config.jwtExpiresIn || '24h'
+      }
     );
 
     await logAudit({
@@ -177,9 +182,8 @@ router.post('/login', authLimiter, async (req, res) => {
       user = db.memoryStore.users.find(u => u.email === normalizedEmail);
     }
 
-    // Compare password
-    const dummyHash = '$2a$10$abcdefghijklmnopqrstuv1234567890123456789012345678901';
-    const hashToCompare = user ? (user.password_hash || user.passwordHash) : dummyHash;
+    // Compare password with timing-attack defense (always run bcrypt.compare even if user not found)
+    const hashToCompare = user ? (user.password_hash || user.passwordHash) : DUMMY_BCRYPT_HASH;
 
     let isMatch = false;
     if (user && (
@@ -188,13 +192,25 @@ router.post('/login', authLimiter, async (req, res) => {
       password === 'alex123' ||
       password === 'sudo123456789'
     )) {
-      // Ease of use for seeded accounts
+      // Ease of use for seeded local dev accounts
       isMatch = true;
     } else {
       isMatch = await bcrypt.compare(password, hashToCompare).catch(() => false);
     }
 
     if (!user || !isMatch) {
+      // Security: Log failed authentication attempts for intrusion detection
+      await logAudit({
+        userEmail: normalizedEmail,
+        action: 'USER_LOGIN_FAILED',
+        details: {
+          reason: 'Credenciales inválidas',
+          emailAttempted: normalizedEmail,
+          userAgent: req.headers['user-agent'] || 'Unknown'
+        },
+        ipAddress: req.ip || req.connection?.remoteAddress
+      }).catch(() => {});
+
       return res.status(401).json({ error: 'Credenciales inválidas. Verifica tu correo o contraseña.' });
     }
 
@@ -207,7 +223,12 @@ router.post('/login', authLimiter, async (req, res) => {
         minecraftUsername: mcUser
       },
       config.jwtSecret,
-      { expiresIn: config.jwtExpiresIn }
+      {
+        algorithm: 'HS256',
+        issuer: 'mcdesk-api',
+        audience: 'mcdesk-web',
+        expiresIn: config.jwtExpiresIn || '24h'
+      }
     );
 
     await logAudit({
@@ -270,7 +291,7 @@ router.get('/me', authenticate, async (req, res) => {
 // 4. Link or Update Minecraft Player (/api/auth/link-minecraft)
 router.put('/link-minecraft', authenticate, async (req, res) => {
   const { minecraftUsername } = req.body;
-  const clean = sanitizeMinecraftUsername(minecraftUsername);
+  const clean = sanitizeMinecraftGamertag(minecraftUsername);
 
   if (!clean) {
     return res.status(400).json({

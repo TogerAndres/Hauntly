@@ -52,6 +52,42 @@
       "minecraft_uuid": "u-3",
       "avatar_url": "https://mc-heads.net/avatar/Santi",
       "created_at": "2026-09-15T21:26:08.615Z"
+    },
+    {
+      "id": "u-1794109427689",
+      "email": "valid_1794109427637@example.com",
+      "display_name": "ValidPlayer",
+      "password_hash": "$2a$10$PTJXglGleIfEmDA.weufXeM0bquJxZvvVPUsk3y0GNlsGgh9i0WNa",
+      "role": "USER",
+      "minecraft_username": "Player_427637",
+      "minecraft_uuid": null,
+      "avatar_url": "https://mc-heads.net/avatar/Player_427637",
+      "is_verified": true,
+      "created_at": "2026-11-08T03:43:47.689Z"
+    },
+    {
+      "id": "u-1794109438677",
+      "email": "valid_1794109438623@example.com",
+      "display_name": "ValidPlayer",
+      "password_hash": "$2a$10$VTZUEDpYOIE.TntFGqby7OJOwH6R/djQh6l9wi/L2bKag1NqD5Zba",
+      "role": "USER",
+      "minecraft_username": "Player_438623",
+      "minecraft_uuid": null,
+      "avatar_url": "https://mc-heads.net/avatar/Player_438623",
+      "is_verified": true,
+      "created_at": "2026-11-08T03:43:58.677Z"
+    },
+    {
+      "id": "u-1794109557310",
+      "email": "valid_1794109557256@example.com",
+      "display_name": "ValidPlayer",
+      "password_hash": "$2a$10$EPXGRF0PzNz4KtbK0nGDHO0PSXhZnItu.Kj5MwwELhR4TJQaWagmS",
+      "role": "USER",
+      "minecraft_username": "Player_557255",
+      "minecraft_uuid": null,
+      "avatar_url": "https://mc-heads.net/avatar/Player_557255",
+      "is_verified": true,
+      "created_at": "2026-11-08T03:45:57.310Z"
     }
   ],
   "servers": [
@@ -93,16 +129,66 @@
       "experience": 14250,
       "armor": 15,
       "inventory": [
-        { "slot": 0, "item": "diamond_sword", "count": 1, "name": "Espada de Diamante Filo V" },
-        { "slot": 1, "item": "bow", "count": 1, "name": "Arco Poder V" },
-        { "slot": 2, "item": "diamond_pickaxe", "count": 1, "name": "Pico de Diamante Eficiencia IV" },
-        { "slot": 3, "item": "golden_apple", "count": 64, "name": "Manzanas Doradas" },
-        { "slot": 4, "item": "cooked_beef", "count": 32, "name": "Filete Cocinado" },
-        { "slot": 5, "item": "shield", "count": 1, "name": "Escudo Reforzado" },
-        { "slot": 6, "item": "diamond", "count": 16, "name": "Diamantes" },
-        { "slot": 7, "item": "potion", "count": 3, "name": "Poción de Velocidad II" },
-        { "slot": 8, "item": "totem_of_undying", "count": 2, "name": "Tótem de Inmortalidad" },
-        { "slot": 9, "item": "ender_pearl", "count": 16, "name": "Perlas de Ender" }
+        {
+          "slot": 0,
+          "item": "diamond_sword",
+          "count": 1,
+          "name": "Espada de Diamante Filo V"
+        },
+        {
+          "slot": 1,
+          "item": "bow",
+          "count": 1,
+          "name": "Arco Poder V"
+        },
+        {
+          "slot": 2,
+          "item": "diamond_pickaxe",
+          "count": 1,
+          "name": "Pico de Diamante Eficiencia IV"
+        },
+        {
+          "slot": 3,
+          "item": "golden_apple",
+          "count": 64,
+          "name": "Manzanas Doradas"
+        },
+        {
+          "slot": 4,
+          "item": "cooked_beef",
+          "count": 32,
+          "name": "Filete Cocinado"
+        },
+        {
+          "slot": 5,
+          "item": "shield",
+          "count": 1,
+          "name": "Escudo Reforzado"
+        },
+        {
+          "slot": 6,
+          "item": "diamond",
+          "count": 16,
+          "name": "Diamantes"
+        },
+        {
+          "slot": 7,
+          "item": "potion",
+          "count": 3,
+          "name": "Poción de Velocidad II"
+        },
+        {
+          "slot": 8,
+          "item": "totem_of_undying",
+          "count": 2,
+          "name": "Tótem de Inmortalidad"
+        },
+        {
+          "slot": 9,
+          "item": "ender_pearl",
+          "count": 16,
+          "name": "Perlas de Ender"
+        }
       ],
       "stats": {
         "playtime_minutes": 6240,
@@ -857,6 +943,225 @@
   "commands": [],
   "audit_logs": [
     {
+      "id": "a-1794109557402",
+      "server_id": "s-1",
+      "user_id": "u-1794109557310",
+      "user_email": "valid_1794109557256@example.com",
+      "action": "MINEMARKET_ITEM_DELIVERED",
+      "details": {
+        "itemId": 1,
+        "itemName": "Rango VIP Esmeralda",
+        "targetPlayer": "Player_557255",
+        "executedCommand": "lp user Player_557255 parent set vip",
+        "result": {
+          "success": false,
+          "error": "Command failed: ssh -S /tmp/ssh_mux_mcserver mcadmin@100.119.178.18 '/home/mcadmin/mc_desk_collector.py cmd \"lp user Player_557255 parent set vip\"'\nssh: connect to host 100.119.178.18 port 22: Operation not permitted\r\n"
+        }
+      },
+      "ip_address": null,
+      "created_at": "2026-11-08T03:45:57.402Z"
+    },
+    {
+      "id": "a-1794109557366",
+      "server_id": "s-1",
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "SECURITY_BLOCKED_COMMAND",
+      "details": {
+        "rejectedCommand": "say Hola; rm -rf /",
+        "reason": "Comando bloqueado por seguridad: contiene caracteres de shell no permitidos (; & | ` $ > < \\)"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:45:57.366Z"
+    },
+    {
+      "id": "a-1794109557365",
+      "server_id": null,
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "USER_LOGIN",
+      "details": {
+        "role": "ADMIN",
+        "minecraftUsername": null
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:45:57.365Z"
+    },
+    {
+      "id": "a-1794109557365",
+      "server_id": null,
+      "user_id": null,
+      "user_email": "nonexistent@example.com",
+      "action": "USER_LOGIN_FAILED",
+      "details": {
+        "reason": "Credenciales inválidas",
+        "emailAttempted": "nonexistent@example.com",
+        "userAgent": "Unknown"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:45:57.365Z"
+    },
+    {
+      "id": "a-1794109557313",
+      "server_id": null,
+      "user_id": "u-1794109557310",
+      "user_email": "valid_1794109557256@example.com",
+      "action": "USER_REGISTERED",
+      "details": {
+        "displayName": "ValidPlayer",
+        "role": "USER",
+        "minecraftUsername": "Player_557255"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:45:57.313Z"
+    },
+    {
+      "id": "a-1794109438773",
+      "server_id": "s-1",
+      "user_id": "u-1794109438677",
+      "user_email": "valid_1794109438623@example.com",
+      "action": "MINEMARKET_ITEM_DELIVERED",
+      "details": {
+        "itemId": 1,
+        "itemName": "Rango VIP Esmeralda",
+        "targetPlayer": "Player_438623",
+        "executedCommand": "lp user Player_438623 parent set vip",
+        "result": {
+          "success": false,
+          "error": "Command failed: ssh -S /tmp/ssh_mux_mcserver mcadmin@100.119.178.18 '/home/mcadmin/mc_desk_collector.py cmd \"lp user Player_438623 parent set vip\"'\nssh: connect to host 100.119.178.18 port 22: Operation not permitted\r\n"
+        }
+      },
+      "ip_address": null,
+      "created_at": "2026-11-08T03:43:58.773Z"
+    },
+    {
+      "id": "a-1794109438735",
+      "server_id": "s-1",
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "SECURITY_BLOCKED_COMMAND",
+      "details": {
+        "rejectedCommand": "say Hola; rm -rf /",
+        "reason": "Comando bloqueado por seguridad: contiene caracteres de shell no permitidos (; & | ` $ > < \\)"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:58.735Z"
+    },
+    {
+      "id": "a-1794109438734",
+      "server_id": null,
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "USER_LOGIN",
+      "details": {
+        "role": "ADMIN",
+        "minecraftUsername": null
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:58.734Z"
+    },
+    {
+      "id": "a-1794109438734",
+      "server_id": null,
+      "user_id": null,
+      "user_email": "nonexistent@example.com",
+      "action": "USER_LOGIN_FAILED",
+      "details": {
+        "reason": "Credenciales inválidas",
+        "emailAttempted": "nonexistent@example.com",
+        "userAgent": "Unknown"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:58.734Z"
+    },
+    {
+      "id": "a-1794109438682",
+      "server_id": null,
+      "user_id": "u-1794109438677",
+      "user_email": "valid_1794109438623@example.com",
+      "action": "USER_REGISTERED",
+      "details": {
+        "displayName": "ValidPlayer",
+        "role": "USER",
+        "minecraftUsername": "Player_438623"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:58.682Z"
+    },
+    {
+      "id": "a-1794109427793",
+      "server_id": "s-1",
+      "user_id": "u-1794109427689",
+      "user_email": "valid_1794109427637@example.com",
+      "action": "MINEMARKET_ITEM_DELIVERED",
+      "details": {
+        "itemId": 1,
+        "itemName": "Rango VIP Esmeralda",
+        "targetPlayer": "Player_427637",
+        "executedCommand": "lp user Player_427637 parent set vip",
+        "result": {
+          "success": false,
+          "error": "Command failed: ssh -S /tmp/ssh_mux_mcserver mcadmin@127.0.0.1 '/home/mcadmin/mc_desk_collector.py cmd \"lp user Player_427637 parent set vip\"'\nssh: connect to host 127.0.0.1 port 22: Operation not permitted\r\n"
+        }
+      },
+      "ip_address": null,
+      "created_at": "2026-11-08T03:43:47.793Z"
+    },
+    {
+      "id": "a-1794109427740",
+      "server_id": "s-1",
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "SECURITY_BLOCKED_COMMAND",
+      "details": {
+        "rejectedCommand": "say Hola; rm -rf /",
+        "reason": "Comando bloqueado por seguridad: contiene caracteres de shell no permitidos (; & | ` $ > < \\)"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:47.740Z"
+    },
+    {
+      "id": "a-1794109427739",
+      "server_id": null,
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "USER_LOGIN",
+      "details": {
+        "role": "ADMIN",
+        "minecraftUsername": null
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:47.739Z"
+    },
+    {
+      "id": "a-1794109427739",
+      "server_id": null,
+      "user_id": null,
+      "user_email": "nonexistent@example.com",
+      "action": "USER_LOGIN_FAILED",
+      "details": {
+        "reason": "Credenciales inválidas",
+        "emailAttempted": "nonexistent@example.com",
+        "userAgent": "Unknown"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:47.739Z"
+    },
+    {
+      "id": "a-1794109427690",
+      "server_id": null,
+      "user_id": "u-1794109427689",
+      "user_email": "valid_1794109427637@example.com",
+      "action": "USER_REGISTERED",
+      "details": {
+        "displayName": "ValidPlayer",
+        "role": "USER",
+        "minecraftUsername": "Player_427637"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-08T03:43:47.690Z"
+    },
+    {
       "id": "a-1",
       "server_id": "s-1",
       "user_email": "roger@mcdesk.io",
@@ -874,13 +1179,13 @@
       "descripcion": "Vuelo en lobby, prefijo VIP brillante en chat y acceso a 3 hogares (/sethome).",
       "tipo": "RANGO",
       "precio": 15000,
-      "stock": 50,
+      "stock": 49,
       "servidor": "Forge 1.20.1",
       "comando": "lp user {player} parent set vip",
       "icono": "emerald",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-08T02:49:18.747Z"
+      "fecha_creacion": "2026-11-08T03:45:57.366Z"
     },
     {
       "id_item": 2,
@@ -894,7 +1199,7 @@
       "icono": "netherite_sword",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-08T02:49:18.747Z"
+      "fecha_creacion": "2026-11-08T03:45:57.366Z"
     },
     {
       "id_item": 3,
@@ -908,7 +1213,7 @@
       "icono": "tripwire_hook",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-08T02:49:18.747Z"
+      "fecha_creacion": "2026-11-08T03:45:57.366Z"
     },
     {
       "id_item": 4,
@@ -922,7 +1227,7 @@
       "icono": "gold_ingot",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-08T02:49:18.747Z"
+      "fecha_creacion": "2026-11-08T03:45:57.366Z"
     }
   ]
 }

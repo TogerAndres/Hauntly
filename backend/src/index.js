@@ -18,7 +18,29 @@ const itemRoutes = require('./routes/items');
 const app = express();
 
 // Security and Logging Middlewares
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https://mc-heads.net", "https://crafatar.com"],
+        connectSrc: ["'self'", "http://localhost:*", "ws://localhost:*", "http://11.11.19.108:*", "http://100.78.40.92:*"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: config.nodeEnv === 'production' ? [] : null
+      }
+    },
+    crossOriginEmbedderPolicy: false,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true
+    }
+  })
+);
 app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 // CORS configuration
@@ -97,24 +119,28 @@ app.use((req, res) => {
   res.status(404).json({ error: `Ruta no encontrada: ${req.method} ${req.originalUrl}` });
 });
 
-// Global Error Handler
+// Global Error Handler (Sanitizes stack traces and database internal errors)
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
+  console.error('[MC-Desk Error]', err);
   const statusCode = err.status || 500;
+  const isProd = config.nodeEnv === 'production';
+
   res.status(statusCode).json({
-    error: err.message || 'Error interno del servidor',
-    ...(config.nodeEnv !== 'production' && { stack: err.stack })
+    error: isProd && statusCode === 500 ? 'Ocurrió un error interno en el servidor' : (err.message || 'Error interno'),
+    ...(!isProd && { stack: err.stack, details: err.details })
   });
 });
 
-// Server Initialization
+// Server Initialization (Only listen when executed directly, allowing clean test importing)
 const PORT = config.port;
-app.listen(PORT, () => {
-  console.log(`===============================================`);
-  console.log(`   🚀 MC-Desk Backend corriendo en puerto ${PORT}`);
-  console.log(`   Ambiente: ${config.nodeEnv}`);
-  console.log(`   Frontend permitido: ${config.frontendOrigin}`);
-  console.log(`===============================================`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`===============================================`);
+    console.log(`   🚀 MC-Desk Backend corriendo en puerto ${PORT}`);
+    console.log(`   Ambiente: ${config.nodeEnv}`);
+    console.log(`   Frontend permitido: ${config.frontendOrigin}`);
+    console.log(`===============================================`);
+  });
+}
 
 module.exports = app;

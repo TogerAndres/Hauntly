@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "test": "node tests/security_tests.js && node tests/integration_auth_security.js"
   },
   "keywords": ["minecraft", "dashboard", "express", "supabase", "render"],
   "author": "MC-Desk Team",

@@ -5,6 +5,7 @@ const { authenticate, requireRole, requireAdmin } = require('../middleware/auth'
 const { logAudit } = require('../services/auditService');
 const { enqueueCommand } = require('../services/commandQueue');
 const minecraftBridge = require('../services/minecraftBridge');
+const { sanitizeMinecraftGamertag, sanitizeConsoleCommand } = require('../middleware/security');
 
 const TIPOS_ITEM = ['RANGO', 'KIT', 'LLAVE', 'COSMETICO', 'MONEDA'];
 
@@ -248,7 +249,11 @@ router.post('/:id/deliver', authenticate, async (req, res) => {
     return res.status(400).json({ error: 'El Gamertag del jugador de Minecraft es obligatorio para la entrega' });
   }
 
-  const cleanPlayer = targetPlayer.trim().replace(/[^a-zA-Z0-9_]/g, '');
+  const cleanPlayer = sanitizeMinecraftGamertag(targetPlayer);
+  if (!cleanPlayer) {
+    return res.status(400).json({ error: 'Gamertag de Minecraft inválido (debe tener entre 2 y 16 caracteres alfanuméricos)' });
+  }
+
   const items = getItemsStore();
   const item = items.find(i => String(i.id_item) === String(id) && i.activo !== false);
 
@@ -262,7 +267,11 @@ router.post('/:id/deliver', authenticate, async (req, res) => {
 
   // Build the command replacing {player} placeholder
   const rawCommand = (item.comando || 'give {player} diamond 1').replace(/\{player\}/gi, cleanPlayer);
-  const cleanCmd = rawCommand.replace(/^[/]/, '').trim();
+  const cmdCheck = sanitizeConsoleCommand(rawCommand);
+  if (!cmdCheck.isValid) {
+    return res.status(400).json({ error: `Comando de entrega inválido o inseguro: ${cmdCheck.error}` });
+  }
+  const cleanCmd = cmdCheck.sanitized;
 
   try {
     let execResult = null;
