@@ -1,15 +1,31 @@
 import React, { useState } from 'react';
 import { useServer } from '../../context/ServerContext';
+import { useAuth } from '../../context/AuthContext';
 import { api } from '../../api/client';
 import { McPlayerFace } from '../ui/MinecraftSprites';
 
 export function GhostPanelCard() {
   const { players, currentServer } = useServer();
+  const { isAdmin } = useAuth();
   const [selectedPlayer, setSelectedPlayer] = useState(players?.[0]?.username || 'Roger');
   const [customPlayer, setCustomPlayer] = useState('');
   const [selectedMode, setSelectedMode] = useState('creative');
   const [isApplying, setIsApplying] = useState(false);
   const [resultMessage, setResultMessage] = useState(null);
+
+  if (!isAdmin) {
+    return (
+      <div className="mc-card" style={{ padding: '32px', textAlign: 'center', background: '#131622' }}>
+        <div style={{ fontSize: '36px', marginBottom: '12px' }}>🛡️</div>
+        <h3 style={{ fontSize: '18px', fontWeight: '800', color: '#f8fafc', marginBottom: '8px' }}>
+          Gestión de Modos de Juego — Acceso Restringido
+        </h3>
+        <p style={{ fontSize: '13px', color: '#94a3b8', maxWidth: '420px', margin: '0 auto', lineHeight: '1.5' }}>
+          Esta herramienta permite cambiar modos de juego en caliente y está reservada exclusivamente para los administradores y operadores del servidor.
+        </p>
+      </div>
+    );
+  }
 
   const activeTarget = (customPlayer.trim() || selectedPlayer || 'Roger').trim();
 

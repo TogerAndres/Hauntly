@@ -37,15 +37,20 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
-// 2. Get player profile by username or uuid
+// 2. Get player profile by username or uuid (supports 'me' for logged-in player)
 router.get('/:identifier', authenticate, async (req, res) => {
   const { serverId, identifier } = req.params;
+  const targetId = (identifier === 'me' ? req.user.minecraftUsername : identifier) || '';
+
+  if (!targetId) {
+    return res.status(404).json({ error: 'No hay jugador vinculado a esta cuenta' });
+  }
 
   try {
     const live = await minecraftBridge.fetchLiveServerData().catch(() => null);
     if (live && live.players) {
       const p = live.players.find(
-        x => x.uuid === identifier || x.username.toLowerCase() === identifier.toLowerCase()
+        x => x.uuid === targetId || x.username.toLowerCase() === targetId.toLowerCase()
       );
       if (p) return res.json({ player: p });
     }
@@ -57,12 +62,12 @@ router.get('/:identifier', authenticate, async (req, res) => {
          FROM players p
          LEFT JOIN player_statistics s ON p.id = s.player_id
          WHERE p.server_id = $1 AND (p.uuid = $2 OR LOWER(p.username) = LOWER($2))`,
-        [serverId, identifier]
+        [serverId, targetId]
       );
       if (result && result.rows.length > 0) player = result.rows[0];
     } else {
       player = db.memoryStore.players.find(
-        p => p.server_id === serverId && (p.uuid === identifier || p.username.toLowerCase() === identifier.toLowerCase())
+        p => (p.server_id === serverId || !p.server_id) && (p.uuid === targetId || p.username.toLowerCase() === targetId.toLowerCase())
       );
     }
 

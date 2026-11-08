@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { authenticate, requireRole } = require('../middleware/auth');
+const { authenticate, requireRole, requireAdmin } = require('../middleware/auth');
 const { logAudit } = require('../services/auditService');
 const { enqueueCommand } = require('../services/commandQueue');
 const minecraftBridge = require('../services/minecraftBridge');
@@ -115,8 +115,8 @@ router.get('/:id', (req, res) => {
   res.json({ item });
 });
 
-// 3. POST /api/items — Create digital item (Requires Admin / Vendedor)
-router.post('/', authenticate, async (req, res) => {
+// 3. POST /api/items — Create digital item (Requires Admin)
+router.post('/', authenticate, requireAdmin, async (req, res) => {
   const { nombre, descripcion, tipo, precio, stock = 100, servidor, comando, icono } = req.body;
 
   if (!nombre || !descripcion || !tipo || precio === undefined) {
@@ -168,7 +168,7 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // 4. PUT /api/items/:id — Update digital item
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', authenticate, requireAdmin, async (req, res) => {
   const items = getItemsStore();
   const idx = items.findIndex(i => String(i.id_item) === String(req.params.id));
   if (idx === -1) {
@@ -204,7 +204,7 @@ router.put('/:id', authenticate, async (req, res) => {
 });
 
 // 5. DELETE /api/items/:id — Soft delete digital item
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
   const items = getItemsStore();
   const item = items.find(i => String(i.id_item) === String(req.params.id));
   if (!item) {
@@ -229,11 +229,26 @@ router.post('/:id/deliver', authenticate, async (req, res) => {
   const { id } = req.params;
   const { playerGamertag, serverId = 's-1' } = req.body;
 
-  if (!playerGamertag || typeof playerGamertag !== 'string' || playerGamertag.trim().length === 0) {
+  let targetPlayer = playerGamertag;
+
+  // REGLA: Los usuarios normales (USER) solo pueden recibir entregas a su propio jugador vinculado en el servidor
+  if (req.user.role === 'USER') {
+    if (!req.user.minecraftUsername) {
+      return res.status(400).json({
+        error: 'Tu cuenta web no está vinculada a ningún jugador de Minecraft en el servidor. Vincula tu cuenta primero.'
+      });
+    }
+    targetPlayer = req.user.minecraftUsername;
+  } else {
+    // Los administradores pueden elegir cualquier jugador o usar el suyo
+    targetPlayer = playerGamertag || req.user.minecraftUsername || 'Steve';
+  }
+
+  if (!targetPlayer || typeof targetPlayer !== 'string' || targetPlayer.trim().length === 0) {
     return res.status(400).json({ error: 'El Gamertag del jugador de Minecraft es obligatorio para la entrega' });
   }
 
-  const cleanPlayer = playerGamertag.trim().replace(/[^a-zA-Z0-9_]/g, '');
+  const cleanPlayer = targetPlayer.trim().replace(/[^a-zA-Z0-9_]/g, '');
   const items = getItemsStore();
   const item = items.find(i => String(i.id_item) === String(id) && i.activo !== false);
 

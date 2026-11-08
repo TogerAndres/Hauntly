@@ -12,9 +12,19 @@ CREATE TABLE IF NOT EXISTS users (
     display_name VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN', 'OWNER')),
+    minecraft_username VARCHAR(64),
+    minecraft_uuid VARCHAR(64),
+    avatar_url TEXT,
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Migrations for existing deployments
+ALTER TABLE users ADD COLUMN IF NOT EXISTS minecraft_username VARCHAR(64);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS minecraft_uuid VARCHAR(64);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_verified BOOLEAN NOT NULL DEFAULT FALSE;
 
 -- 2. Servers Table
 CREATE TABLE IF NOT EXISTS servers (
@@ -101,17 +111,24 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     server_id UUID REFERENCES servers(id) ON DELETE SET NULL,
     user_id UUID REFERENCES users(id) ON DELETE SET NULL,
     user_email VARCHAR(255),
-    action VARCHAR(100) NOT NULL,
+    action VARCHAR(50) NOT NULL,
     details JSONB,
     ip_address VARCHAR(45),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Indexes for optimal performance
-CREATE INDEX IF NOT EXISTS idx_servers_owner ON servers(owner_id);
-CREATE INDEX IF NOT EXISTS idx_servers_claim ON servers(claim_code);
-CREATE INDEX IF NOT EXISTS idx_servers_token ON servers(agent_token);
-CREATE INDEX IF NOT EXISTS idx_players_server ON players(server_id);
-CREATE INDEX IF NOT EXISTS idx_players_online ON players(server_id, is_online);
-CREATE INDEX IF NOT EXISTS idx_commands_status ON server_commands(server_id, status);
-CREATE INDEX IF NOT EXISTS idx_audit_server ON audit_logs(server_id, created_at DESC);
+-- 8. Digital Store Items (MineMarket)
+CREATE TABLE IF NOT EXISTS store_items (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(120) NOT NULL,
+    descripcion TEXT NOT NULL,
+    tipo VARCHAR(30) NOT NULL CHECK (tipo IN ('RANGO', 'KIT', 'LLAVE', 'COSMETICO', 'MONEDA')),
+    precio NUMERIC(10, 2) NOT NULL,
+    stock INTEGER NOT NULL DEFAULT 100,
+    servidor VARCHAR(100) DEFAULT 'Minecraft Server',
+    comando TEXT NOT NULL,
+    icono VARCHAR(80) DEFAULT 'diamond',
+    id_vendedor UUID REFERENCES users(id) ON DELETE SET NULL,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    fecha_creacion TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

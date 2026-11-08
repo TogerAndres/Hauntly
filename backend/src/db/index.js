@@ -30,6 +30,40 @@ const memoryStore = {
       display_name: 'Roger',
       password_hash: '$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k', // 'admin123'
       role: 'OWNER',
+      minecraft_username: null,
+      avatar_url: 'https://mc-heads.net/avatar/Steve',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'u-admin',
+      email: 'admin@mcdesk.io',
+      display_name: 'Admin MC-Desk',
+      password_hash: '$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k', // 'admin123'
+      role: 'ADMIN',
+      minecraft_username: null,
+      avatar_url: 'https://mc-heads.net/avatar/Steve',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'u-steve',
+      email: 'steve@mcdesk.io',
+      display_name: 'Steve',
+      password_hash: '$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k', // 'steve123'
+      role: 'USER',
+      minecraft_username: 'Steve',
+      minecraft_uuid: 'c06f8906-4c8a-4911-9c29-ea1dbd1aab82',
+      avatar_url: 'https://mc-heads.net/avatar/Steve',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'u-alex',
+      email: 'alex@mcdesk.io',
+      display_name: 'Alex',
+      password_hash: '$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k', // 'alex123'
+      role: 'USER',
+      minecraft_username: 'Alex',
+      minecraft_uuid: 'u-2',
+      avatar_url: 'https://mc-heads.net/avatar/Alex',
       created_at: new Date().toISOString()
     }
   ],

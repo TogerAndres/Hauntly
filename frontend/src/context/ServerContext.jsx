@@ -232,13 +232,35 @@ export const DEMO_TOP_PLAYERS = [
 ];
 
 export function ServerProvider({ children }) {
-  const { isDemoMode } = useAuth();
+  const { user, isDemoMode, isAdmin, isPlayer, linkedPlayer } = useAuth();
   const [currentServer, setCurrentServer] = useState(DEMO_SERVER);
   const [servers, setServers] = useState([DEMO_SERVER]);
   const [players, setPlayers] = useState(DEMO_PLAYERS);
   const [selectedPlayer, setSelectedPlayer] = useState(DEMO_PLAYERS[0]);
   const [topPlayers, setTopPlayers] = useState(DEMO_TOP_PLAYERS);
   const [loading, setLoading] = useState(false);
+
+  // Automatically lock selectedPlayer to the linked player if the user is a regular Player
+  useEffect(() => {
+    if (isPlayer && linkedPlayer && players.length > 0) {
+      const myPlayer = players.find(p => p.username.toLowerCase() === linkedPlayer.toLowerCase());
+      if (myPlayer) {
+        setSelectedPlayer(myPlayer);
+      }
+    }
+  }, [user, linkedPlayer, isPlayer, players]);
+
+  const handleSelectPlayer = (p) => {
+    if (isAdmin) {
+      setSelectedPlayer(p);
+    } else if (isPlayer && linkedPlayer) {
+      // Normal players are bound to their linked account
+      const myPlayer = players.find(x => x.username.toLowerCase() === linkedPlayer.toLowerCase());
+      setSelectedPlayer(myPlayer || p);
+    } else {
+      setSelectedPlayer(p);
+    }
+  };
 
   const fetchServerData = async (serverId = 's-1', isInitial = false) => {
     try {
@@ -256,6 +278,10 @@ export function ServerProvider({ children }) {
         setPlayers(plyRes.players);
         // Maintain or update selected player
         setSelectedPlayer(prev => {
+          if (isPlayer && linkedPlayer) {
+            const myPlayer = plyRes.players.find(p => p.username.toLowerCase() === linkedPlayer.toLowerCase());
+            if (myPlayer) return myPlayer;
+          }
           if (!prev) return plyRes.players[0];
           const found = plyRes.players.find(p => p.username === prev.username);
           return found || plyRes.players[0];
@@ -288,7 +314,7 @@ export function ServerProvider({ children }) {
         setServers,
         players,
         selectedPlayer,
-        setSelectedPlayer,
+        setSelectedPlayer: handleSelectPlayer,
         topPlayers,
         loading,
         refresh: () => fetchServerData(currentServer?.id || 's-1')

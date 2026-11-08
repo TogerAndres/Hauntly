@@ -6,6 +6,51 @@
       "display_name": "Roger",
       "password_hash": "$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k",
       "role": "OWNER",
+      "minecraft_username": null,
+      "avatar_url": "https://mc-heads.net/avatar/Steve",
+      "created_at": "2026-09-15T21:26:08.615Z"
+    },
+    {
+      "id": "u-admin",
+      "email": "admin@mcdesk.io",
+      "display_name": "Admin MC-Desk",
+      "password_hash": "$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k",
+      "role": "ADMIN",
+      "minecraft_username": null,
+      "avatar_url": "https://mc-heads.net/avatar/Steve",
+      "created_at": "2026-09-15T21:26:08.615Z"
+    },
+    {
+      "id": "u-steve",
+      "email": "steve@mcdesk.io",
+      "display_name": "Steve",
+      "password_hash": "$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k",
+      "role": "USER",
+      "minecraft_username": "Steve",
+      "minecraft_uuid": "c06f8906-4c8a-4911-9c29-ea1dbd1aab82",
+      "avatar_url": "https://mc-heads.net/avatar/Steve",
+      "created_at": "2026-09-15T21:26:08.615Z"
+    },
+    {
+      "id": "u-alex",
+      "email": "alex@mcdesk.io",
+      "display_name": "Alex",
+      "password_hash": "$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k",
+      "role": "USER",
+      "minecraft_username": "Alex",
+      "minecraft_uuid": "u-2",
+      "avatar_url": "https://mc-heads.net/avatar/Alex",
+      "created_at": "2026-09-15T21:26:08.615Z"
+    },
+    {
+      "id": "u-santi",
+      "email": "santi@mcdesk.io",
+      "display_name": "Santi",
+      "password_hash": "$2a$10$X8m1U7V0h3X7a8s1d4f2g.8r9t0y1u2i3o4p5a6s7d8f9g0h1j2k",
+      "role": "USER",
+      "minecraft_username": "Santi",
+      "minecraft_uuid": "u-3",
+      "avatar_url": "https://mc-heads.net/avatar/Santi",
       "created_at": "2026-09-15T21:26:08.615Z"
     }
   ],
@@ -34,6 +79,38 @@
     }
   ],
   "players": [
+    {
+      "id": "p-steve",
+      "server_id": "s-1",
+      "uuid": "c06f8906-4c8a-4911-9c29-ea1dbd1aab82",
+      "username": "Steve",
+      "skin_url": "https://mc-heads.net/avatar/Steve",
+      "is_online": true,
+      "ping": 18,
+      "health": 20,
+      "food": 20,
+      "level": 42,
+      "experience": 14250,
+      "armor": 15,
+      "inventory": [
+        { "slot": 0, "item": "diamond_sword", "count": 1, "name": "Espada de Diamante Filo V" },
+        { "slot": 1, "item": "bow", "count": 1, "name": "Arco Poder V" },
+        { "slot": 2, "item": "diamond_pickaxe", "count": 1, "name": "Pico de Diamante Eficiencia IV" },
+        { "slot": 3, "item": "golden_apple", "count": 64, "name": "Manzanas Doradas" },
+        { "slot": 4, "item": "cooked_beef", "count": 32, "name": "Filete Cocinado" },
+        { "slot": 5, "item": "shield", "count": 1, "name": "Escudo Reforzado" },
+        { "slot": 6, "item": "diamond", "count": 16, "name": "Diamantes" },
+        { "slot": 7, "item": "potion", "count": 3, "name": "Poción de Velocidad II" },
+        { "slot": 8, "item": "totem_of_undying", "count": 2, "name": "Tótem de Inmortalidad" },
+        { "slot": 9, "item": "ender_pearl", "count": 16, "name": "Perlas de Ender" }
+      ],
+      "stats": {
+        "playtime_minutes": 6240,
+        "blocks_mined": 28400,
+        "mobs_killed": 2150,
+        "deaths": 6
+      }
+    },
     {
       "id": "p-1",
       "server_id": "s-1",

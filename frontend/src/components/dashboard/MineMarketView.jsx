@@ -16,7 +16,7 @@ const TIPO_COLORES = {
 
 export function MineMarketView() {
   const { players, currentServer } = useServer();
-  const { user } = useAuth();
+  const { user, isAdmin, isPlayer, linkedPlayer } = useAuth();
 
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ export function MineMarketView() {
 
   // Delivery Modal State
   const [deliverModalItem, setDeliverModalItem] = useState(null);
-  const [targetPlayer, setTargetPlayer] = useState(players?.[0]?.username || 'Roger');
+  const [targetPlayer, setTargetPlayer] = useState(isPlayer && linkedPlayer ? linkedPlayer : (players?.[0]?.username || 'Steve'));
   const [isDelivering, setIsDelivering] = useState(false);
 
   // Create/Edit Item Modal State
@@ -158,39 +158,41 @@ export function MineMarketView() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => {
-            setFormData({
-              nombre: '',
-              descripcion: '',
-              tipo: 'RANGO',
-              precio: 10000,
-              stock: 50,
-              servidor: currentServer?.name || 'Forge 1.20.1',
-              comando: 'give {player} diamond 64',
-              icono: 'diamond'
-            });
-            setEditItemModal('nuevo');
-          }}
-          style={{
-            background: 'linear-gradient(135deg, #10b981, #059669)',
-            color: '#ffffff',
-            fontWeight: '700',
-            fontSize: '12px',
-            padding: '9px 16px',
-            borderRadius: '8px',
-            border: 'none',
-            cursor: 'pointer',
-            boxShadow: '0 2px 10px rgba(16,185,129,0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <span>➕</span>
-          <span>Publicar Ítem Digital</span>
-        </button>
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={() => {
+              setFormData({
+                nombre: '',
+                descripcion: '',
+                tipo: 'RANGO',
+                precio: 10000,
+                stock: 50,
+                servidor: currentServer?.name || 'Forge 1.20.1',
+                comando: 'give {player} diamond 64',
+                icono: 'diamond'
+              });
+              setEditItemModal('nuevo');
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              color: '#ffffff',
+              fontWeight: '700',
+              fontSize: '12px',
+              padding: '9px 16px',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(16,185,129,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>➕</span>
+            <span>Publicar Ítem Digital</span>
+          </button>
+        )}
       </div>
 
       {/* Feedback Banner */}
@@ -513,57 +515,83 @@ export function MineMarketView() {
 
             {/* Target Player Selection */}
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '700', color: '#cbd5e1', display: 'block', marginBottom: '8px' }}>
-                Selecciona el jugador que recibirá el beneficio:
-              </label>
+              {isPlayer ? (
+                <div style={{
+                  background: 'rgba(16, 185, 129, 0.12)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px'
+                }}>
+                  <McPlayerFace username={linkedPlayer || 'Steve'} size={28} />
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#6ee7b7' }}>
+                      Entrega directa a: {linkedPlayer || 'Steve'}
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+                      Beneficio exclusivo para tu cuenta vinculada en el servidor.
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <label style={{ fontSize: '12px', fontWeight: '700', color: '#cbd5e1', display: 'block', marginBottom: '8px' }}>
+                    Selecciona el jugador que recibirá el beneficio:
+                  </label>
 
-              {/* Online Players Pills */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
-                {(players || []).map((p) => {
-                  const isSel = targetPlayer === p.username;
-                  return (
-                    <button
-                      key={p.uuid || p.username}
-                      type="button"
-                      onClick={() => setTargetPlayer(p.username)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        background: isSel ? 'rgba(56,189,248,0.2)' : 'rgba(30,41,59,0.6)',
-                        border: isSel ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
-                        color: isSel ? '#38bdf8' : '#e2e8f0',
-                        fontSize: '11px',
-                        fontWeight: '600',
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <McPlayerFace username={p.username} size={16} />
-                      <span>{p.username}</span>
-                    </button>
-                  );
-                })}
-              </div>
+                  {/* Online Players Pills */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
+                    {(players || []).map((p) => {
+                      const isSel = targetPlayer === p.username;
+                      return (
+                        <button
+                          key={p.uuid || p.username}
+                          type="button"
+                          onClick={() => setTargetPlayer(p.username)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            background: isSel ? 'rgba(56,189,248,0.2)' : 'rgba(30,41,59,0.6)',
+                            border: isSel ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
+                            color: isSel ? '#38bdf8' : '#e2e8f0',
+                            fontSize: '11px',
+                            fontWeight: '600',
+                            padding: '4px 8px',
+                            borderRadius: '6px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <McPlayerFace username={p.username} size={16} />
+                          <span>{p.username}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-              {/* Custom Gamertag Input */}
-              <input
-                type="text"
-                placeholder="O escribe Gamertag exacto..."
-                value={targetPlayer}
-                onChange={(e) => setTargetPlayer(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: 'rgba(15,23,42,0.8)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  borderRadius: '6px',
-                  padding: '8px 12px',
-                  color: '#f8fafc',
-                  fontSize: '13px',
-                  fontFamily: 'monospace'
-                }}
-              />
+                  {/* Custom Gamertag Input */}
+                  <input
+                    type="text"
+                    placeholder="O escribe Gamertag exacto..."
+                    value={targetPlayer}
+                    onChange={(e) => setTargetPlayer(e.target.value)}
+                    style={{
+                      width: '100%',
+                      background: 'rgba(15,23,42,0.8)',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      borderRadius: '6px',
+                      padding: '8px 12px',
+                      color: '#f8fafc',
+                      fontSize: '13px',
+                      fontFamily: 'monospace',
+                      outline: 'none',
+                      boxSizing: 'border-box'
+                    }}
+                  />
+                </>
+              )}
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px' }}>

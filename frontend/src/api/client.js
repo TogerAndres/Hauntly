@@ -40,7 +40,10 @@ async function request(endpoint, { method = 'GET', body = null, headers = {} } =
 export const api = {
   // Auth
   login: (email, password) => request('/api/auth/login', { method: 'POST', body: { email, password } }),
-  register: (email, displayName, password) => request('/api/auth/register', { method: 'POST', body: { email, displayName, password } }),
+  register: (email, displayName, password, role = 'USER', minecraftUsername = '') => 
+    request('/api/auth/register', { method: 'POST', body: { email, displayName, password, role, minecraftUsername } }),
+  linkMinecraft: (minecraftUsername) => 
+    request('/api/auth/link-minecraft', { method: 'PUT', body: { minecraftUsername } }),
   getMe: () => request('/api/auth/me'),
 
   // Servers

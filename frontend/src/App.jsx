@@ -5,7 +5,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 
 function AppContent() {
-  const { user, loading, setIsDemoMode } = useAuth();
+  const { user, loading, switchToDemoRole } = useAuth();
 
   if (loading) {
     return (
@@ -19,7 +19,7 @@ function AppContent() {
   }
 
   if (!user) {
-    return <Login onEnterDemo={() => setIsDemoMode(true)} />;
+    return <Login onEnterDemo={() => switchToDemoRole('ADMIN')} />;
   }
 
   return (
