@@ -43,19 +43,23 @@ app.use(
 );
 app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 
-// CORS configuration
+// CORS configuration (Allows Vercel deployments, custom domains, and local dev)
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, server agent)
+    // Allow requests with no origin (like server agent, curl, mobile clients)
     if (!origin) return callback(null, true);
-    if (config.frontendOrigin === '*' || config.frontendOrigin === origin) {
+
+    const allowed = (config.frontendOrigin || '*').split(',').map(s => s.trim());
+    if (allowed.includes('*') || allowed.includes(origin)) {
       return callback(null, true);
     }
-    // Allow localhost during dev
-    if (config.nodeEnv !== 'production' && origin.includes('localhost')) {
+
+    // Allow any Vercel preview or production deployment (*.vercel.app)
+    if (origin.endsWith('.vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
       return callback(null, true);
     }
-    return callback(new Error('Bloqueado por política CORS'));
+
+    return callback(new Error(`Bloqueado por política CORS: origen ${origin} no autorizado`));
   },
   credentials: true
 };
@@ -87,12 +91,18 @@ app.get('/', (req, res) => {
   });
 });
 
-// Public Agent Installer Downloads
+// Public Agent Installer Downloads (Auto-injects backend cloud URL)
 app.get('/install.sh', (req, res) => {
   const installPath = path.join(__dirname, '../../server-agent/install.sh');
   if (fs.existsSync(installPath)) {
+    const proto = req.headers['x-forwarded-proto'] || req.protocol || 'http';
+    const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost:3000';
+    const backendUrl = `${proto}://${host}`;
+
+    let content = fs.readFileSync(installPath, 'utf8');
+    content = content.replace(/http:\/\/localhost:3000/g, backendUrl);
     res.setHeader('Content-Type', 'text/x-shellscript');
-    return res.sendFile(installPath);
+    return res.send(content);
   }
   res.status(404).send('# Error: install.sh no encontrado');
 });

@@ -641,6 +641,51 @@ def main():
     print(f"[*] Directorio de Minecraft detectado: {mc_dir}")
     print(f"[*] Conectando a Backend API: {backend_url}")
 
+    if not agent_token and not claim_code:
+        print("[*] No se encontró token previo. Iniciando registro automático de servidor...")
+        server_props = read_server_properties(mc_dir)
+        server_name = server_props.get("motd", "Mi Servidor Minecraft").replace("§", "")
+        server_port = int(server_props.get("server-port", 25565))
+
+        init_resp = http_post(f"{backend_url}/api/agent/register-init", {
+            "serverName": server_name,
+            "port": server_port,
+            "software": cfg.get("server_software", "Forge"),
+            "version": cfg.get("server_version", "1.20.1")
+        })
+
+        if init_resp and init_resp.get("pairingCode"):
+            pairing_code = init_resp["pairingCode"]
+            print("\n" + "=" * 64)
+            print("   🚀 MC-DESK: ¡SERVIDOR LISTO PARA VINCULAR AL PANEL WEB!")
+            print("=" * 64)
+            print("   Copia y pega este código en tu panel web MC-Desk:")
+            print("")
+            print(f"        👉   {pairing_code}   👈")
+            print("")
+            print("   (Ve a la web -> Conectar Servidor con Token -> Pega el código)")
+            print("=" * 64)
+            print("[*] Esperando a que vincules el servidor desde el panel web...\n")
+
+            poll_sec = init_resp.get("pollIntervalSeconds", 2)
+            while True:
+                time.sleep(poll_sec)
+                status_resp = http_post(f"{backend_url}/api/agent/pairing-status", {
+                    "pairingCode": pairing_code
+                })
+                if status_resp and status_resp.get("paired"):
+                    agent_token = status_resp["agentToken"]
+                    cfg["agent_token"] = agent_token
+                    save_config(cfg)
+                    print(f"\n[✓] ¡Éxito! Servidor vinculado a tu cuenta web ({status_resp.get('serverName')}).")
+                    print(f"[✓] Token permanente guardado en config.json.\n")
+                    break
+        else:
+            err = init_resp.get("error", "No se pudo conectar con el backend") if init_resp else "Backend inaccesible"
+            print(f"[x] Error registrando servidor ({err}). Verifica que {backend_url} esté en línea.")
+            time.sleep(5)
+            return
+
     if not agent_token and claim_code:
         print(f"[*] Vinculando servidor mediante Claim Code: {claim_code}...")
         resp = http_post(f"{backend_url}/api/agent/verify", {

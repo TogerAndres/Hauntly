@@ -27,7 +27,9 @@ async function request(endpoint, { method = 'GET', body = null, headers = {} } =
     const data = await res.json().catch(() => ({}));
     
     if (!res.ok) {
-      throw new Error(data.error || `Error HTTP ${res.status}`);
+      const err = new Error(data.error || `Error HTTP ${res.status}`);
+      if (data.details) err.details = data.details;
+      throw err;
     }
     return data;
   } catch (err) {
@@ -50,6 +52,7 @@ export const api = {
   getServers: () => request('/api/servers'),
   getServer: (id) => request(`/api/servers/${id}`),
   createServer: (data) => request('/api/servers', { method: 'POST', body: data }),
+  claimServerByToken: (pairingCode) => request('/api/servers/claim-by-token', { method: 'POST', body: { pairingCode } }),
   regenerateClaimCode: (id) => request(`/api/servers/${id}/regenerate-claim`, { method: 'POST' }),
   wakeServer: (id) => request(`/api/servers/${id}/wake`, { method: 'POST' }),
 

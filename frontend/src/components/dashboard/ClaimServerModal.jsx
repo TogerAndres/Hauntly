@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { api } from '../../api/client';
 import { useServer } from '../../context/ServerContext';
+import { KeyRound, Terminal, Copy, Check, Server, Sparkles, AlertCircle } from 'lucide-react';
 
 export function ClaimServerModal({ isOpen, onClose }) {
   const { refresh } = useServer();
+  const [activeTab, setActiveTab] = useState('token'); // 'token' | 'manual'
+
+  // Token Claim State
+  const [pairingToken, setPairingToken] = useState('');
+  const [tokenLoading, setTokenLoading] = useState(false);
+  const [tokenError, setTokenError] = useState(null);
+  const [tokenSuccess, setTokenSuccess] = useState(null);
+  const [copiedCmd, setCopiedCmd] = useState(false);
+
+  // Manual Form State
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -16,11 +27,46 @@ export function ClaimServerModal({ isOpen, onClose }) {
   const [claimData, setClaimData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e) => {
+  const currentBackendUrl = (import.meta.env.VITE_API_URL || window.location.origin).replace(/\/$/, '');
+  const installCmd = `curl -sSL ${currentBackendUrl}/install.sh | bash`;
+
+  const handleCopyCmd = () => {
+    navigator.clipboard.writeText(installCmd);
+    setCopiedCmd(true);
+    setTimeout(() => setCopiedCmd(false), 2000);
+  };
+
+  const handleClaimByToken = async (e) => {
+    e.preventDefault();
+    const clean = pairingToken.trim().toUpperCase();
+    if (!clean) {
+      setTokenError('Por favor introduce el código o token de vinculación.');
+      return;
+    }
+
+    setTokenLoading(true);
+    setTokenError(null);
+    setTokenSuccess(null);
+
+    try {
+      const res = await api.claimServerByToken(clean);
+      setTokenSuccess(res.message || '¡Servidor conectado exitosamente!');
+      refresh();
+      setTimeout(() => {
+        onClose();
+      }, 1500);
+    } catch (err) {
+      setTokenError(err.message || 'Código de vinculación no encontrado o inválido.');
+    } finally {
+      setTokenLoading(false);
+    }
+  };
+
+  const handleManualSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.host) {
       setError('Por favor completa el nombre y la IP del servidor.');
@@ -36,171 +82,258 @@ export function ClaimServerModal({ isOpen, onClose }) {
       setStep(2);
       refresh();
     } catch (err) {
-      // Demo simulated claim
-      const mockClaimCode = 'MC-DESK-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-      setClaimData({
-        server: { name: formData.name, host: formData.host, minecraft_ip: formData.minecraft_ip },
-        claimInstructions: {
-          claimCode: mockClaimCode
-        }
-      });
-      setStep(2);
+      setError(err.message || 'Error al registrar el servidor.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCopyCode = () => {
-    if (claimData?.claimInstructions?.claimCode) {
-      navigator.clipboard.writeText(claimData.claimInstructions.claimCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="mc-card w-full max-w-lg p-5">
+      <div className="mc-card w-full max-w-lg p-5 border border-slate-800 shadow-2xl relative">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <span style={{ fontSize: '18px' }}>🛡️</span>
-            <span className="font-bold text-sm text-gray-200">Reclamar y Vincular Servidor</span>
+            <span className="text-lg">🛡️</span>
+            <div>
+              <h2 className="font-bold text-sm text-gray-100">Vincular Servidor de Minecraft</h2>
+              <p className="text-[11px] text-gray-400">Conecta tu servidor al panel MC-Desk para ver telemetría y HUD en vivo</p>
+            </div>
           </div>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-white px-2 py-0.5 mc-btn text-xs"
+            className="text-gray-400 hover:text-white px-2.5 py-1 mc-btn text-xs"
           >
-            ✕ Cerrar
+            ✕
           </button>
         </div>
 
-        {step === 1 ? (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-            {error && (
-              <div className="p-2 bg-red-900/50 border border-red-500/50 text-red-200 text-xs rounded">
-                {error}
+        {/* Tab Selection */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <button
+            type="button"
+            onClick={() => setActiveTab('token')}
+            className={`py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
+              activeTab === 'token'
+                ? 'bg-emerald-950/80 border-emerald-500 text-emerald-300 shadow-sm'
+                : 'bg-slate-900 border-slate-800 text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            <KeyRound size={14} />
+            <span>Conectar con Token (Consola)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('manual')}
+            className={`py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 border ${
+              activeTab === 'manual'
+                ? 'bg-purple-950/80 border-purple-500 text-purple-300 shadow-sm'
+                : 'bg-slate-900 border-slate-800 text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            <Server size={14} />
+            <span>Registro Manual</span>
+          </button>
+        </div>
+
+        {/* TAB 1: CONNECT BY TOKEN (RECOMMENDED 1-COMMAND SETUP) */}
+        {activeTab === 'token' && (
+          <div className="flex flex-col gap-3.5">
+            {tokenError && (
+              <div className="p-2.5 bg-red-950/80 border border-red-500/60 text-red-200 text-xs rounded-lg flex items-center gap-2">
+                <AlertCircle size={15} className="flex-shrink-0 text-red-400" />
+                <span>{tokenError}</span>
               </div>
             )}
 
-            <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1">Nombre del Servidor</label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="ej: Porristas Ingenieros"
-                className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <div className="col-span-2">
-                <label className="block text-xs font-semibold text-gray-300 mb-1">IP de Red / Host Local</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.host}
-                  onChange={(e) => setFormData({ ...formData, host: e.target.value })}
-                  placeholder="ej: mc.tudominio.com o 192.168.1.50"
-                  className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
-                />
+            {tokenSuccess && (
+              <div className="p-2.5 bg-emerald-950/80 border border-emerald-500/60 text-emerald-200 text-xs rounded-lg flex items-center gap-2">
+                <Sparkles size={15} className="flex-shrink-0 text-emerald-400" />
+                <span>{tokenSuccess}</span>
               </div>
+            )}
 
-              <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">Puerto</label>
-                <input
-                  type="number"
-                  value={formData.port}
-                  onChange={(e) => setFormData({ ...formData, port: e.target.value })}
-                  className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-300 mb-1">
-                IP / Dominio Público de Minecraft (para unirse)
-              </label>
-              <input
-                type="text"
-                value={formData.minecraft_ip}
-                onChange={(e) => setFormData({ ...formData, minecraft_ip: e.target.value })}
-                placeholder="ej: mc.tudominio.com"
-                className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-emerald-400 focus:outline-none focus:border-emerald-500 font-mono"
-              />
-              <span className="text-[10px] text-gray-400 mt-0.5 block">
-                Esta es la dirección pública que verán y copiarán los jugadores para conectarse en Minecraft.
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">Software</label>
-                <select
-                  value={formData.software}
-                  onChange={(e) => setFormData({ ...formData, software: e.target.value })}
-                  className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
+            {/* Step 1: Run Command in Terminal */}
+            <div className="p-3 bg-slate-900/80 border border-slate-800 rounded-lg">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] font-bold text-gray-300 flex items-center gap-1.5">
+                  <Terminal size={13} className="text-emerald-400" />
+                  <span>Paso 1: Ejecuta este comando en la terminal de tu servidor:</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={handleCopyCmd}
+                  className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/30"
                 >
-                  <option value="Paper">Paper</option>
-                  <option value="Purpur">Purpur</option>
-                  <option value="Forge">Forge</option>
-                  <option value="Fabric">Fabric</option>
-                  <option value="Spigot">Spigot</option>
-                </select>
+                  {copiedCmd ? <Check size={11} /> : <Copy size={11} />}
+                  <span>{copiedCmd ? '¡Copiado!' : 'Copiar'}</span>
+                </button>
               </div>
 
+              <div className="bg-slate-950 p-2 rounded border border-slate-800 font-mono text-[11px] text-emerald-300 select-all break-all">
+                {installCmd}
+              </div>
+
+              <p className="text-[10px] text-gray-400 mt-1.5">
+                💡 O ejecuta directamente: <code className="text-gray-300">python3 server-agent/agent.py</code>
+              </p>
+            </div>
+
+            {/* Step 2: Paste Token */}
+            <form onSubmit={handleClaimByToken} className="flex flex-col gap-3">
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">Versión</label>
-                <input
-                  type="text"
-                  value={formData.version}
-                  onChange={(e) => setFormData({ ...formData, version: e.target.value })}
-                  placeholder="1.21.4"
-                  className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
-                />
+                <label className="block text-xs font-semibold text-gray-300 mb-1">
+                  Paso 2: Introduce el código que apareció en la consola:
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={pairingToken}
+                    onChange={(e) => setPairingToken(e.target.value)}
+                    placeholder="ej: MC-DESK-4B12-9A8C"
+                    className="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-amber-300 font-mono font-bold tracking-wider focus:outline-none focus:border-emerald-500 shadow-inner uppercase"
+                  />
+                </div>
+                <span className="text-[10px] text-gray-400 mt-1 block">
+                  El agente mostrará un código de 8 a 16 caracteres listo para emparejar.
+                </span>
               </div>
-            </div>
 
-            <div className="mt-2 flex justify-end gap-2">
-              <button type="button" onClick={onClose} className="mc-btn text-xs">
-                Cancelar
-              </button>
-              <button type="submit" disabled={loading} className="mc-btn mc-btn-active text-xs">
-                {loading ? 'Generando token...' : 'Continuar y Generar Token ➔'}
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div className="flex flex-col gap-4">
-            <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded text-center">
-              <div className="text-xs text-gray-400 mb-1">Código de Vinculación de Servidor</div>
-              <div className="font-mono text-xl font-bold text-amber-300 tracking-wider my-1 select-all">
-                {claimData?.claimInstructions?.claimCode}
+              <div className="mt-1 flex justify-end gap-2">
+                <button type="button" onClick={onClose} className="mc-btn text-xs">
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={tokenLoading}
+                  className="mc-btn mc-btn-active text-xs flex items-center gap-1.5 py-2 px-4"
+                >
+                  <KeyRound size={13} />
+                  <span>{tokenLoading ? 'Verificando...' : 'Conectar Servidor'}</span>
+                </button>
               </div>
-              <button 
-                onClick={handleCopyCode}
-                className="mc-btn text-xs px-3 py-1 mt-1"
-              >
-                {copied ? '¡Código Copiado! ✓' : '📋 Copiar Código'}
-              </button>
-            </div>
+            </form>
+          </div>
+        )}
 
-            <div className="text-xs text-gray-300 flex flex-col gap-2">
-              <div className="font-semibold text-gray-200">Pasos para verificar tu servidor:</div>
-              <ol className="list-decimal pl-5 flex flex-col gap-1.5 text-gray-300">
-                <li>Descarga o copia la carpeta <code className="bg-slate-900 px-1 py-0.5 rounded text-emerald-400">server-agent</code> en tu servidor Linux de Minecraft.</li>
-                <li>Pega el código anterior en <code className="bg-slate-900 px-1 py-0.5 rounded text-amber-300">config.json</code> en el campo <code className="text-amber-300">&quot;claim_code&quot;</code>.</li>
-                <li>Ejecuta el Agent: <code className="bg-slate-900 px-1 py-0.5 rounded">python3 agent.py</code> (o instala como servicio con <code className="bg-slate-900 px-1 py-0.5 rounded">sudo ./install.sh</code>).</li>
-              </ol>
-            </div>
+        {/* TAB 2: MANUAL REGISTRATION (LEGACY FLOW) */}
+        {activeTab === 'manual' && (
+          <div>
+            {step === 1 ? (
+              <form onSubmit={handleManualSubmit} className="flex flex-col gap-3">
+                {error && (
+                  <div className="p-2 bg-red-900/50 border border-red-500/50 text-red-200 text-xs rounded">
+                    {error}
+                  </div>
+                )}
 
-            <div className="mt-2 flex justify-end">
-              <button onClick={onClose} className="mc-btn mc-btn-active text-xs px-4">
-                Entendido / Finalizar
-              </button>
-            </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">Nombre del Servidor</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="ej: Servidor Survival Forge"
+                    className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="col-span-2">
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">IP de Red / Host</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.host}
+                      onChange={(e) => setFormData({ ...formData, host: e.target.value })}
+                      placeholder="ej: 127.0.0.1 o mc.tudominio.com"
+                      className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Puerto</label>
+                    <input
+                      type="number"
+                      value={formData.port}
+                      onChange={(e) => setFormData({ ...formData, port: e.target.value })}
+                      className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Software</label>
+                    <select
+                      value={formData.software}
+                      onChange={(e) => setFormData({ ...formData, software: e.target.value })}
+                      className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
+                    >
+                      <option value="Forge">Forge</option>
+                      <option value="Fabric">Fabric</option>
+                      <option value="Paper">Paper</option>
+                      <option value="Purpur">Purpur</option>
+                      <option value="Spigot">Spigot</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Versión</label>
+                    <input
+                      type="text"
+                      value={formData.version}
+                      onChange={(e) => setFormData({ ...formData, version: e.target.value })}
+                      placeholder="1.20.1"
+                      className="w-full bg-slate-900 border border-gray-700 rounded p-2 text-xs text-gray-200 focus:outline-none focus:border-emerald-500 font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-2 flex justify-end gap-2">
+                  <button type="button" onClick={onClose} className="mc-btn text-xs">
+                    Cancelar
+                  </button>
+                  <button type="submit" disabled={loading} className="mc-btn mc-btn-active text-xs">
+                    {loading ? 'Generando...' : 'Generar Claim Code ➔'}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded text-center">
+                  <div className="text-xs text-gray-400 mb-1">Código de Vinculación</div>
+                  <div className="font-mono text-xl font-bold text-amber-300 tracking-wider my-1 select-all">
+                    {claimData?.claimInstructions?.claimCode}
+                  </div>
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(claimData?.claimInstructions?.claimCode || '');
+                      setCopiedCode(true);
+                      setTimeout(() => setCopiedCode(false), 2000);
+                    }}
+                    className="mc-btn text-xs px-3 py-1 mt-1"
+                  >
+                    {copiedCode ? '¡Código Copiado! ✓' : '📋 Copiar Código'}
+                  </button>
+                </div>
+
+                <div className="text-xs text-gray-300 flex flex-col gap-2">
+                  <div className="font-semibold text-gray-200">Ejecuta en tu servidor:</div>
+                  <code className="bg-slate-900 p-2 rounded text-emerald-300 font-mono block select-all">
+                    python3 server-agent/agent.py --claim {claimData?.claimInstructions?.claimCode}
+                  </code>
+                </div>
+
+                <div className="mt-2 flex justify-end">
+                  <button onClick={onClose} className="mc-btn mc-btn-active text-xs px-4">
+                    Entendido / Cerrar
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

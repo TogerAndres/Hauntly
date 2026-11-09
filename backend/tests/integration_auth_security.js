@@ -173,7 +173,40 @@ async function run() {
   assert.strictEqual(telemetryRes.body.acknowledged, true);
   console.log('  ✅ 10. Agent Telemetry: Sincronización telemétrica y de jugadores por HTTPS');
 
-  console.log('\n🎉 ¡Todas las 10 pruebas de integración pasaron con éxito (0 llamadas SSH)!\n');
+  // 11. Flujo completo: Registro automático iniciado en consola de Minecraft (Auto-Token Init)
+  const autoInit = await makeRequest(app, 'POST', '/api/agent/register-init', {
+    serverName: 'Servidor Auto-Claim Test',
+    port: 25565,
+    software: 'Forge',
+    version: '1.20.1'
+  });
+  assert.strictEqual(autoInit.status, 200);
+  assert(autoInit.body.pairingCode.startsWith('MC-DESK-'));
+  const serverPairingCode = autoInit.body.pairingCode;
+  console.log('  ✅ 11. Auto-Token Init: Servidor genera código en consola (' + serverPairingCode + ')');
+
+  // 12. Usuario web introduce el token en el panel (/api/servers/claim-by-token)
+  const claimRes = await makeRequest(
+    app,
+    'POST',
+    '/api/servers/claim-by-token',
+    { pairingCode: serverPairingCode },
+    { authorization: `Bearer ${adminToken}` }
+  );
+  assert.strictEqual(claimRes.status, 200);
+  assert.strictEqual(claimRes.body.success, true);
+  assert.strictEqual(claimRes.body.server.is_verified, true);
+
+  // 13. El agente consulta pairing-status y recibe su token permanente
+  const pairCheck = await makeRequest(app, 'POST', '/api/agent/pairing-status', {
+    pairingCode: serverPairingCode
+  });
+  assert.strictEqual(pairCheck.status, 200);
+  assert.strictEqual(pairCheck.body.paired, true);
+  assert(pairCheck.body.agentToken.startsWith('mca_'));
+  console.log('  ✅ 12. Flujo Web-to-Server Token Pairing: Servidor emparejado y activado en el panel');
+
+  console.log('\n🎉 ¡Todas las 12 pruebas de integración pasaron con éxito (0 llamadas SSH)!\n');
 }
 
 run().catch(err => {

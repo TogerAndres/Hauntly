@@ -112,6 +112,18 @@
       "avatar_url": "https://mc-heads.net/avatar/Player_670811",
       "is_verified": true,
       "created_at": "2026-11-09T15:37:50.864Z"
+    },
+    {
+      "id": "u-1794240920991",
+      "email": "valid_1794240920939@example.com",
+      "display_name": "ValidPlayer",
+      "password_hash": "$2a$10$NSfbH0Qh9m19Qs3ai9YVCOD42f4rDYK9KtGPkWiRpfq/i9P4RKyAC",
+      "role": "USER",
+      "minecraft_username": "Player_920939",
+      "minecraft_uuid": null,
+      "avatar_url": "https://mc-heads.net/avatar/Player_920939",
+      "is_verified": true,
+      "created_at": "2026-11-09T16:15:20.991Z"
     }
   ],
   "servers": [
@@ -132,10 +144,33 @@
       "cpu_temp": "N/D",
       "claim_code": null,
       "claim_code_expires": null,
-      "agent_token": "mca_11719ba1f7b16b416d8732047efdf5c06040ded42b8f20c469862993fb1fac4d",
+      "agent_token": "mca_f54340f220acf793cab0ea088099c27031949a0c423eec6f72cfa89113f46793",
       "is_verified": true,
       "owner_id": "u-1",
-      "last_ping_at": "2026-11-09T15:37:57.928Z"
+      "last_ping_at": "2026-11-09T16:15:28.051Z"
+    },
+    {
+      "id": "s-1794240928051",
+      "name": "Servidor Auto-Claim Test",
+      "host": "127.0.0.1",
+      "port": 25565,
+      "software": "Forge",
+      "version": "1.20.1",
+      "status": "ONLINE",
+      "max_players": 20,
+      "online_players": 0,
+      "tps": 20,
+      "uptime": "0s",
+      "cpu_usage": 0,
+      "ram_usage": 0,
+      "cpu_temp": "N/D",
+      "claim_code": "MC-DESK-E32D-93C7",
+      "claim_code_expires": "2026-11-10T16:15:28.051Z",
+      "pairing_secret": "mcp_846b8044dcaab259da500a929166886772e8eb634d7b8fd0",
+      "agent_token": "mca_6a863236580d21930d4f6f9125fbf84008304398e4a56c4638f51be979af5fb0",
+      "is_verified": true,
+      "owner_id": "u-admin",
+      "created_at": "2026-11-09T16:15:28.051Z"
     }
   ],
   "players": [
@@ -175,9 +210,158 @@
       "command": "lp user Player_670811 parent set vip",
       "status": "SENT",
       "created_at": "2026-11-09T15:37:50.922Z"
+    },
+    {
+      "id": "cmd_1794240921045_a4eae2",
+      "server_id": "s-1",
+      "command": "lp user Player_920939 parent set vip",
+      "status": "SENT",
+      "created_at": "2026-11-09T16:15:21.045Z"
     }
   ],
   "audit_logs": [
+    {
+      "id": "a-1794240928054",
+      "server_id": "s-1794240928051",
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "SERVER_CLAIMED_BY_TOKEN",
+      "details": {
+        "serverName": "Servidor Auto-Claim Test",
+        "host": "127.0.0.1",
+        "codeUsed": "MC-DESK-E32D-93C7"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-09T16:15:28.054Z"
+    },
+    {
+      "id": "a-1794240928050",
+      "server_id": "s-1",
+      "user_id": null,
+      "user_email": "system",
+      "action": "AGENT_VERIFIED_SUCCESSFULLY",
+      "details": {
+        "agentVersion": "1.0.0",
+        "host": "play.midominio.com"
+      },
+      "ip_address": null,
+      "created_at": "2026-11-09T16:15:28.050Z"
+    },
+    {
+      "id": "a-1794240928047",
+      "server_id": "s-1",
+      "user_id": "u-1794240920991",
+      "user_email": "valid_1794240920939@example.com",
+      "action": "MINEMARKET_ITEM_DELIVERED",
+      "details": {
+        "itemId": 1,
+        "itemName": "Rango VIP Esmeralda",
+        "targetPlayer": "Player_920939",
+        "executedCommand": "lp user Player_920939 parent set vip",
+        "result": {
+          "success": true,
+          "queued": true,
+          "command": "lp user Player_920939 parent set vip",
+          "message": "Comando /lp user Player_920939 parent set vip encolado para el Agent."
+        }
+      },
+      "ip_address": null,
+      "created_at": "2026-11-09T16:15:28.047Z"
+    },
+    {
+      "id": "a-1794240921044",
+      "server_id": "s-1",
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "SECURITY_BLOCKED_COMMAND",
+      "details": {
+        "rejectedCommand": "say Hola; rm -rf /",
+        "reason": "Comando bloqueado por seguridad: contiene caracteres de shell no permitidos (; & | ` $ > < \\)"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-09T16:15:21.044Z"
+    },
+    {
+      "id": "a-1794240921044",
+      "server_id": null,
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "USER_LOGIN",
+      "details": {
+        "role": "ADMIN",
+        "minecraftUsername": null
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-09T16:15:21.044Z"
+    },
+    {
+      "id": "a-1794240921043",
+      "server_id": null,
+      "user_id": null,
+      "user_email": "nonexistent@example.com",
+      "action": "USER_LOGIN_FAILED",
+      "details": {
+        "reason": "Credenciales inválidas",
+        "emailAttempted": "nonexistent@example.com",
+        "userAgent": "Unknown"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-09T16:15:21.043Z"
+    },
+    {
+      "id": "a-1794240920993",
+      "server_id": null,
+      "user_id": "u-1794240920991",
+      "user_email": "valid_1794240920939@example.com",
+      "action": "USER_REGISTERED",
+      "details": {
+        "displayName": "ValidPlayer",
+        "role": "USER",
+        "minecraftUsername": "Player_920939"
+      },
+      "ip_address": "127.0.0.1",
+      "created_at": "2026-11-09T16:15:20.993Z"
+    },
+    {
+      "id": "a-1794239023789",
+      "server_id": null,
+      "user_id": "u-steve",
+      "user_email": "steve@mcdesk.io",
+      "action": "USER_LOGIN",
+      "details": {
+        "role": "USER",
+        "minecraftUsername": "Steve"
+      },
+      "ip_address": "::1",
+      "created_at": "2026-11-09T15:43:43.789Z"
+    },
+    {
+      "id": "a-1794239011383",
+      "server_id": null,
+      "user_id": "u-admin",
+      "user_email": "admin@mcdesk.io",
+      "action": "USER_LOGIN",
+      "details": {
+        "role": "ADMIN",
+        "minecraftUsername": null
+      },
+      "ip_address": "::1",
+      "created_at": "2026-11-09T15:43:31.383Z"
+    },
+    {
+      "id": "a-1794239009166",
+      "server_id": null,
+      "user_id": null,
+      "user_email": "rogeralvarez22082007@gmail.com",
+      "action": "USER_LOGIN_FAILED",
+      "details": {
+        "reason": "Credenciales inválidas",
+        "emailAttempted": "rogeralvarez22082007@gmail.com",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15"
+      },
+      "ip_address": "::1",
+      "created_at": "2026-11-09T15:43:29.166Z"
+    },
     {
       "id": "a-1794238677927",
       "server_id": "s-1",
@@ -597,7 +781,7 @@
       "icono": "emerald",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-09T15:37:50.918Z"
+      "fecha_creacion": "2026-11-09T16:15:21.045Z"
     },
     {
       "id_item": 2,
@@ -611,7 +795,7 @@
       "icono": "netherite_sword",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-09T15:37:50.918Z"
+      "fecha_creacion": "2026-11-09T16:15:21.045Z"
     },
     {
       "id_item": 3,
@@ -625,7 +809,7 @@
       "icono": "tripwire_hook",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-09T15:37:50.918Z"
+      "fecha_creacion": "2026-11-09T16:15:21.045Z"
     },
     {
       "id_item": 4,
@@ -639,7 +823,7 @@
       "icono": "gold_ingot",
       "id_vendedor": "u-1",
       "activo": true,
-      "fecha_creacion": "2026-11-09T15:37:50.918Z"
+      "fecha_creacion": "2026-11-09T16:15:21.045Z"
     }
   ]
 }

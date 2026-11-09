@@ -19,6 +19,129 @@ router.get('/ping', (req, res) => {
   });
 });
 
+function generateClaimCode() {
+  const p1 = crypto.randomBytes(2).toString('hex').toUpperCase();
+  const p2 = crypto.randomBytes(2).toString('hex').toUpperCase();
+  return `MC-DESK-${p1}-${p2}`;
+}
+
+// 0.1 Server-Initiated Auto-Registration (Generates pairing token to print in server console)
+router.post('/register-init', async (req, res) => {
+  const {
+    serverName = 'Mi Servidor Minecraft',
+    host = '127.0.0.1',
+    port = 25565,
+    software = 'Forge',
+    version = '1.20.1',
+    systemInfo = {}
+  } = req.body;
+
+  try {
+    const pairingCode = generateClaimCode();
+    const pairingSecret = `mcp_${crypto.randomBytes(24).toString('hex')}`;
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const serverId = `s-${Date.now()}`;
+
+    let server = null;
+    if (db.pool) {
+      const adminUser = await db.query("SELECT id FROM users WHERE role_id = (SELECT id FROM roles WHERE code = 'ADMIN' OR code = 'OWNER' LIMIT 1) LIMIT 1");
+      const defaultOwnerId = adminUser.rows?.[0]?.id || null;
+
+      const result = await db.query(
+        `INSERT INTO servers (id, name, host, port, software, version, claim_code, claim_code_expires, status, is_verified, owner_id)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'STARTING', false, $9)
+         RETURNING *`,
+        [serverId, serverName.trim(), host.trim(), parseInt(port, 10), software, version, pairingCode, expiresAt, defaultOwnerId]
+      );
+      server = result.rows[0];
+    } else {
+      server = {
+        id: serverId,
+        name: serverName.trim(),
+        host: host.trim(),
+        port: parseInt(port, 10),
+        software,
+        version,
+        status: 'STARTING',
+        max_players: 20,
+        online_players: 0,
+        tps: 20.0,
+        uptime: '0s',
+        cpu_usage: 0.0,
+        ram_usage: 0.0,
+        cpu_temp: 'N/D',
+        claim_code: pairingCode,
+        claim_code_expires: expiresAt.toISOString(),
+        pairing_secret: pairingSecret,
+        agent_token: null,
+        is_verified: false,
+        owner_id: db.memoryStore.users?.[0]?.id || 'u-admin',
+        created_at: new Date().toISOString()
+      };
+      if (!db.memoryStore.servers) db.memoryStore.servers = [];
+      db.memoryStore.servers.push(server);
+      db.saveStore?.();
+    }
+
+    res.json({
+      success: true,
+      pairingCode,
+      pairingSecret,
+      expiresAt: expiresAt.toISOString(),
+      pollIntervalSeconds: 2,
+      message: 'Token de vinculación generado. Muéstralo en la consola de Minecraft.'
+    });
+  } catch (err) {
+    console.error('Error in agent register-init:', err);
+    res.status(500).json({ error: 'Error al inicializar registro de servidor' });
+  }
+});
+
+// 0.2 Check if server was claimed from the Web Panel
+router.post('/pairing-status', async (req, res) => {
+  const { pairingCode } = req.body;
+
+  if (!pairingCode) {
+    return res.status(400).json({ error: 'pairingCode es requerido' });
+  }
+
+  try {
+    let server = null;
+    if (db.pool) {
+      const resServer = await db.query(
+        'SELECT id, name, is_verified, agent_token, owner_id FROM servers WHERE claim_code = $1',
+        [pairingCode.trim().toUpperCase()]
+      );
+      if (resServer && resServer.rows.length > 0) server = resServer.rows[0];
+    } else {
+      server = db.memoryStore.servers.find(s => s.claim_code && s.claim_code.toUpperCase() === pairingCode.trim().toUpperCase());
+    }
+
+    if (!server) {
+      return res.status(404).json({ error: 'Código de emparejamiento no encontrado' });
+    }
+
+    if (server.is_verified && server.agent_token) {
+      return res.json({
+        paired: true,
+        agentToken: server.agent_token,
+        serverId: server.id,
+        serverName: server.name,
+        message: '¡Servidor vinculado exitosamente desde el panel web!'
+      });
+    }
+
+    res.json({
+      paired: false,
+      status: 'WAITING_FOR_USER_CLAIM',
+      message: 'Esperando a que el usuario introduzca el código en el panel web.'
+    });
+  } catch (err) {
+    console.error('Error in pairing-status check:', err);
+    res.status(500).json({ error: 'Error al consultar estado de emparejamiento' });
+  }
+});
+
 // 1. Initial Agent Claim / Verification Handshake (Public with claimCode)
 router.post('/verify', async (req, res) => {
   const { claimCode, agentVersion = '1.0.0', serverInfo = {} } = req.body;

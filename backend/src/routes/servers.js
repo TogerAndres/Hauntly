@@ -163,7 +163,91 @@ router.post('/:id/wake', authenticate, async (req, res) => {
   }
 });
 
-// 5. Regenerate claim code
+// 5. Claim / Pair Server via Token generated in the Minecraft console
+router.post('/claim-by-token', authenticate, async (req, res) => {
+  const { token, pairingCode } = req.body;
+  const rawCode = (pairingCode || token || '').trim().toUpperCase();
+
+  if (!rawCode) {
+    return res.status(400).json({ error: 'Código o token de vinculación requerido' });
+  }
+
+  try {
+    let server = null;
+    if (db.pool) {
+      const result = await db.query(
+        'SELECT * FROM servers WHERE claim_code = $1',
+        [rawCode]
+      );
+      if (result && result.rows.length > 0) server = result.rows[0];
+    } else {
+      server = db.memoryStore.servers.find(s => s.claim_code && s.claim_code.toUpperCase() === rawCode);
+    }
+
+    if (!server) {
+      return res.status(404).json({ error: 'Código de vinculación no encontrado o inválido. Asegúrate de copiarlo tal como aparece en la consola.' });
+    }
+
+    if (server.claim_code_expires && new Date(server.claim_code_expires) < new Date()) {
+      return res.status(410).json({ error: 'El código de vinculación ha expirado. Ejecuta el agente nuevamente para generar uno nuevo.' });
+    }
+
+    // Generate persistent agent token if not present
+    const agentToken = server.agent_token || `mca_${crypto.randomBytes(32).toString('hex')}`;
+
+    if (db.pool) {
+      await db.query(
+        `UPDATE servers
+         SET owner_id = $1,
+             is_verified = true,
+             agent_token = $2,
+             status = 'ONLINE',
+             updated_at = NOW()
+         WHERE id = $3`,
+        [req.user.id, agentToken, server.id]
+      );
+      server.owner_id = req.user.id;
+      server.is_verified = true;
+      server.agent_token = agentToken;
+      server.status = 'ONLINE';
+    } else {
+      server.owner_id = req.user.id;
+      server.is_verified = true;
+      server.agent_token = agentToken;
+      server.status = 'ONLINE';
+      db.saveStore?.();
+    }
+
+    await logAudit({
+      serverId: server.id,
+      userId: req.user.id,
+      userEmail: req.user.email,
+      action: 'SERVER_CLAIMED_BY_TOKEN',
+      details: { serverName: server.name, host: server.host, codeUsed: rawCode },
+      ipAddress: req.ip
+    });
+
+    res.json({
+      success: true,
+      message: `¡Servidor "${server.name}" conectado exitosamente a tu cuenta!`,
+      server: {
+        id: server.id,
+        name: server.name,
+        host: server.host,
+        port: server.port,
+        software: server.software,
+        version: server.version,
+        status: server.status,
+        is_verified: true
+      }
+    });
+  } catch (err) {
+    console.error('Error claiming server by token:', err);
+    res.status(500).json({ error: 'Error interno al vincular servidor con token' });
+  }
+});
+
+// 6. Regenerate claim code
 router.post('/:id/regenerate-claim', authenticate, async (req, res) => {
   const { id } = req.params;
   const newCode = generateClaimCode();

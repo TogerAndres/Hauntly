@@ -102,9 +102,9 @@ export function Header({ onOpenClaimModal }) {
             onClick={onOpenClaimModal}
             className="mc-nav-btn"
             style={{ padding: '6px 12px', fontSize: '12px', width: 'auto' }}
-            title="Vincular un servidor"
+            title="Vincular un servidor mediante código o token de consola"
           >
-            <span>➕</span> Agregar Servidor
+            <span>🔗</span> Conectar Servidor
           </button>
         )}
 

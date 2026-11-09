@@ -75,8 +75,8 @@ if [ -z "$BACKEND_URL" ]; then
 fi
 
 if [ -z "$CLAIM_CODE" ]; then
-  if [ ! -f "$CURRENT_DIR/config.json" ] || ! grep -q "agent_token" "$CURRENT_DIR/config.json"; then
-    read -p "Introduce el Claim Code del panel (ej: MC-DESK-ABCD-1234): " input_claim
+  if [ -t 0 ] && [ ! -f "$CURRENT_DIR/config.json" ]; then
+    read -p "Introduce el Claim Code del panel (opcional, pulsa Enter para generar token en consola): " input_claim
     CLAIM_CODE="$input_claim"
   fi
 fi
