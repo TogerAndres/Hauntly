@@ -50,7 +50,7 @@ Los servidores de Minecraft comunitarios tradicionalmente dependen de paneles ge
 1. **Monitoreo HUD en Tiempo Real:** Inspecciona vida en corazones de Minecraft, barra de hambre, armadura e inventario casilla por casilla de cada jugador conectado leyendo directamente archivos NBT y sockets sin lag.
 2. **MineMarket Integrado:** Tienda digital nativa para la comunidad con precios en moneda local (**$ COP**), control de stock automático y entrega instantánea in-game mediante ejecución de comandos (`/lp user {player} parent set ...`, `/give {player} ...`).
 3. **Gestor de Gamemode Dinámico:** Interfaz fluida y limpia para cambiar el modo de juego (`Supervivencia`, `Creativo`, `Aventura`, `Espectador`) de cualquier jugador con un solo clic.
-4. **Cero Puertos Expuestos:** Conexión ultra segura a través de un daemon liviano en Python (`< 15 MB RAM`) con comunicación saliente o puente SSH multiplexado.
+4. **Cero Puertos Expuestos (100% SSH-Free):** Conexión ultra segura a través de un daemon liviano en Python (`< 15 MB RAM`) con comunicación saliente HTTPS hacia Render, sin abrir puertos (ni el puerto 22 de SSH) ni exponer credenciales.
 5. **Estética Minecraft & Microinteracciones:** Diseñado con pixel-art fiel a Minecraft, la mascota oficial **Gengar** y física de resortes táctiles inspirada en las reglas de *Design Engineering* de **Emil Kowalski**.
 
 ---
@@ -96,7 +96,7 @@ Selector rápido con retroalimentación táctil `:active { transform: scale(0.97
                                      ▼
  ┌────────────────────────────────────────────────────────────────────────┐
  │                           API BACKEND (Node.js)                        │
- │     Express REST • Auth RBAC • Queue de Comandos • SSH Master Mux      │
+ │   Express REST • Auth RBAC • Queue de Comandos • Agent API HTTPS       │
  └─────────────┬───────────────────────────────────────────┬──────────────┘
                │                                           │
        SQL Pool│                                  SSH Mux /│ Agent Polling
@@ -175,9 +175,7 @@ MC-Desk/
 │       └── services/
 │           ├── auditService.js # Registro cronológico de auditoría
 │           ├── commandQueue.js # Cola asíncrona de comandos de servidor
-│           ├── minecraftBridge.js # Puente SSH multiplexado de ultra baja latencia
-│           ├── spawn_ssh_master.py # Inicializador pty para multiplexación SSH
-│           └── mc_desk_collector.py # Recolector de métricas NBT y estado en el host
+│           └── minecraftBridge.js # Puente de integración conectado a la cola del Agent (Zero SSH)
 │
 ├── frontend/                   # Capa de Interfaz Web (React 18 + Vite)
 │   ├── .env.clone              # Plantilla de variables para frontend (VITE_API_URL)
@@ -241,7 +239,7 @@ MC-Desk/
 
 ### Prerrequisitos
 * **Node.js 18+** y **npm** instalados.
-* **Python 3.8+** (opcional, necesario si usas el puente SSH multiplexado o el daemon en Linux).
+* **Python 3.8+** (necesario en la máquina que aloja Minecraft para ejecutar el daemon del Agent).
 
 ---
 

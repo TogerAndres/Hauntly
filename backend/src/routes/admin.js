@@ -57,25 +57,9 @@ router.use(authenticate, checkServerAdmin);
 const minecraftBridge = require('../services/minecraftBridge');
 const { enqueueCommand } = require('../services/commandQueue');
 
-// Helper to determine if server should use Agent queue or fallback Bridge
+// Universal Server Command Execution via Agent Queue
 async function runServerCommand(serverId, cmd) {
-  let server = null;
-  if (db.pool) {
-    const res = await db.query('SELECT * FROM servers WHERE id = $1', [serverId]);
-    if (res && res.rows.length > 0) server = res.rows[0];
-  } else {
-    server = db.memoryStore.servers.find(s => s.id === serverId);
-  }
-
-  const isAgentActive = server && server.agent_token && server.last_ping_at &&
-    (Date.now() - new Date(server.last_ping_at).getTime() < 120000);
-
-  if (isAgentActive) {
-    return await enqueueCommand(serverId, cmd);
-  }
-
-  // Fallback to direct SSH Bridge for local/legacy dev
-  return await minecraftBridge.executeRemoteCommand(cmd);
+  return await enqueueCommand(serverId, cmd);
 }
 
 // 1. Send Command to Console with strict sanitization
@@ -192,8 +176,8 @@ router.post('/action', async (req, res) => {
   }
 
   try {
-    // Execute live on the server
-    const execResult = await minecraftBridge.executeRemoteCommand(cmd);
+    // Execute live on the server via Agent
+    const execResult = await runServerCommand(serverId, cmd);
 
     // Audit log
     await logAudit({
@@ -231,18 +215,7 @@ router.post('/stealth-gamemode', async (req, res) => {
     : 'survival';
 
   try {
-    let result = null;
-
-    // Check if server is agent-active
-    const srv = db.memoryStore.servers.find(s => s.id === serverId);
-    const isAgentActive = srv && srv.agent_token && srv.last_ping_at &&
-      (Date.now() - new Date(srv.last_ping_at).getTime() < 120000);
-
-    if (isAgentActive) {
-      result = await enqueueCommand(serverId, `__ACTION__:STEALTH_GAMEMODE ${cleanPlayer} ${cleanMode}`);
-    } else {
-      result = await minecraftBridge.executeStealthGamemode(cleanPlayer, cleanMode);
-    }
+    const result = await enqueueCommand(serverId, `__ACTION__:STEALTH_GAMEMODE ${cleanPlayer} ${cleanMode}`);
 
     await logAudit({
       serverId,
@@ -292,7 +265,7 @@ router.get('/backups', async (req, res) => {
   const { serverId } = req.params;
 
   try {
-    const backups = await minecraftBridge.listRemoteBackups();
+    const backups = await minecraftBridge.listRemoteBackups(serverId);
     res.json({ backups });
   } catch (err) {
     console.error('Error fetching backups:', err);
@@ -305,7 +278,7 @@ router.post('/backups', async (req, res) => {
   const { serverId } = req.params;
 
   try {
-    const result = await minecraftBridge.createRemoteBackup();
+    const result = await enqueueCommand(serverId, '__ACTION__:BACKUP');
 
     await logAudit({
       serverId,
@@ -331,7 +304,7 @@ router.get('/settings', async (req, res) => {
   const { serverId } = req.params;
 
   try {
-    const properties = await minecraftBridge.getServerProperties();
+    const properties = await minecraftBridge.getServerProperties(serverId);
     res.json({ properties });
   } catch (err) {
     console.error('Error fetching server settings:', err);
@@ -349,7 +322,7 @@ router.post('/settings', async (req, res) => {
   }
 
   try {
-    const result = await minecraftBridge.updateServerProperties(properties);
+    const result = await minecraftBridge.updateServerProperties(properties, serverId);
 
     await logAudit({
       serverId,

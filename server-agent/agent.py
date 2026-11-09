@@ -592,6 +592,8 @@ def http_post(url, data, headers=None):
     except Exception as e:
         return {"error": str(e)}
 
+import argparse
+
 # =============================================================================
 # Main Loop & Handshake
 # =============================================================================
@@ -601,7 +603,33 @@ def main():
     print(f"       🚀 MC-Desk Universal Agent v{VERSION}      ")
     print(f"==================================================")
 
+    parser = argparse.ArgumentParser(description="MC-Desk Universal Server Agent")
+    parser.add_argument("--url", "--backend", dest="backend_url", help="URL del backend MC-Desk (ej: https://tu-app.onrender.com)")
+    parser.add_argument("--claim", dest="claim_code", help="Código de vinculación generado en el panel (MC-DESK-XXXX-YYYY)")
+    parser.add_argument("--token", dest="agent_token", help="Token persistente del agente (mca_...)")
+    parser.add_argument("--dir", dest="minecraft_dir", help="Ruta al directorio del servidor Minecraft")
+    parser.add_argument("--screen", dest="screen_session", help="Nombre de la sesión de screen de Minecraft")
+    parser.add_argument("--poll", dest="poll_interval", type=int, help="Intervalo de telemetría en segundos (por defecto 3)")
+    args, _ = parser.parse_known_args()
+
     cfg = load_config()
+
+    # Override config with CLI arguments if provided
+    if args.backend_url:
+        cfg["backend_url"] = args.backend_url.strip()
+    if args.claim_code:
+        cfg["claim_code"] = args.claim_code.strip()
+    if args.agent_token:
+        cfg["agent_token"] = args.agent_token.strip()
+    if args.minecraft_dir:
+        cfg["minecraft_dir"] = args.minecraft_dir.strip()
+    if args.screen_session:
+        cfg["screen_session"] = args.screen_session.strip()
+    if args.poll_interval:
+        cfg["poll_interval_seconds"] = args.poll_interval
+
+    save_config(cfg)
+
     backend_url = cfg.get("backend_url", "http://localhost:3000").rstrip("/")
     claim_code = cfg.get("claim_code", "").strip()
     agent_token = cfg.get("agent_token", "").strip()
@@ -611,6 +639,7 @@ def main():
 
     mc_dir = detect_minecraft_dir(cfg.get("minecraft_dir", ""))
     print(f"[*] Directorio de Minecraft detectado: {mc_dir}")
+    print(f"[*] Conectando a Backend API: {backend_url}")
 
     if not agent_token and claim_code:
         print(f"[*] Vinculando servidor mediante Claim Code: {claim_code}...")

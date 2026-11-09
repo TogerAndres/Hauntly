@@ -10,7 +10,7 @@ router.get('/', authenticate, async (req, res) => {
   const { serverId } = req.params;
 
   try {
-    const live = await minecraftBridge.fetchLiveServerData().catch(() => null);
+    const live = await minecraftBridge.fetchLiveServerData(serverId).catch(() => null);
     if (live && live.players && live.players.length > 0) {
       return res.json({ players: live.players });
     }
@@ -47,7 +47,7 @@ router.get('/:identifier', authenticate, async (req, res) => {
   }
 
   try {
-    const live = await minecraftBridge.fetchLiveServerData().catch(() => null);
+    const live = await minecraftBridge.fetchLiveServerData(serverId).catch(() => null);
     if (live && live.players) {
       const p = live.players.find(
         x => x.uuid === targetId || x.username.toLowerCase() === targetId.toLowerCase()
@@ -87,7 +87,7 @@ router.get('/rankings/top', authenticate, async (req, res) => {
   const { serverId } = req.params;
 
   try {
-    const live = await minecraftBridge.fetchLiveServerData().catch(() => null);
+    const live = await minecraftBridge.fetchLiveServerData(serverId).catch(() => null);
     if (live && live.players) {
       const top = [...live.players]
         .sort((a, b) => (b.level || 0) - (a.level || 0))

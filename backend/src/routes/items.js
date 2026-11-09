@@ -274,18 +274,8 @@ router.post('/:id/deliver', authenticate, async (req, res) => {
   const cleanCmd = cmdCheck.sanitized;
 
   try {
-    let execResult = null;
-
-    // Check if server is agent-based or legacy bridge
-    const srv = db.memoryStore.servers.find(s => s.id === serverId);
-    const isAgentActive = srv && srv.agent_token && srv.last_ping_at &&
-      (Date.now() - new Date(srv.last_ping_at).getTime() < 120000);
-
-    if (isAgentActive) {
-      execResult = await enqueueCommand(serverId, cleanCmd);
-    } else {
-      execResult = await minecraftBridge.executeRemoteCommand(cleanCmd);
-    }
+    // Deliver item command directly via Agent Queue
+    const execResult = await enqueueCommand(serverId, cleanCmd);
 
     // Decrement stock
     item.stock = Math.max(0, item.stock - 1);

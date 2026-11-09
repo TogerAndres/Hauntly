@@ -118,7 +118,7 @@ async function run() {
   assert.strictEqual(forbiddenCmd.status, 403);
   console.log('  ✅ 6. Restricción RBAC: Jugadores comunes no tienen acceso a consola de admin');
 
-  // 7. Compra de tienda con Gamertag forzado al usuario logueado
+  // 7. Compra de tienda con Gamertag forzado al usuario logueado (Zero SSH, Agent Queue)
   const deliverRes = await makeRequest(
     app,
     'POST',
@@ -128,9 +128,52 @@ async function run() {
   );
   assert.strictEqual(deliverRes.status, 200);
   assert.strictEqual(deliverRes.body.deliveredTo, randomMc, 'La entrega debe ignorar el gamertag adulterado y usar el vinculado');
-  console.log('  ✅ 7. MineMarket: Entrega blindada al Gamertag del usuario autenticado');
+  console.log('  ✅ 7. MineMarket: Entrega blindada al Gamertag del usuario autenticado (100% SSH-Free)');
 
-  console.log('\n🎉 ¡Todas las 7 pruebas de integración pasaron con éxito!\n');
+  // 8. Verificación de salud y conectividad de la Agent API para Render
+  const agentPing = await makeRequest(app, 'GET', '/api/agent/ping');
+  assert.strictEqual(agentPing.status, 200);
+  assert.strictEqual(agentPing.body.status, 'online');
+  assert.strictEqual(agentPing.body.cloud, 'render-ready');
+  console.log('  ✅ 8. Agent API: Endpoint público /api/agent/ping verificado para despliegue en Render');
+
+  // 9. Handshake y vinculación de servidor con Claim Code
+  const dbStore = require('../src/db');
+  const testServer = dbStore.memoryStore.servers[0];
+  testServer.claim_code = 'MC-DESK-TEST-9999';
+
+  const badClaim = await makeRequest(app, 'POST', '/api/agent/verify', { claimCode: 'INVALID-CODE' });
+  assert.strictEqual(badClaim.status, 404);
+
+  const goodClaim = await makeRequest(app, 'POST', '/api/agent/verify', { claimCode: 'MC-DESK-TEST-9999' });
+  assert.strictEqual(goodClaim.status, 200);
+  assert(goodClaim.body.agentToken.startsWith('mca_'), 'Debe generar token seguro mca_');
+  const agentToken = goodClaim.body.agentToken;
+  console.log('  ✅ 9. Agent Handshake: Vinculación con Claim Code y emisión de Agent Token');
+
+  // 10. Envío de telemetría desde el Agent con autenticación HMAC/Token
+  const telemetryRes = await makeRequest(
+    app,
+    'POST',
+    '/api/agent/telemetry',
+    {
+      status: 'ONLINE',
+      onlinePlayers: 3,
+      maxPlayers: 20,
+      tps: 19.98,
+      cpuUsage: 12.5,
+      ramUsage: 45.0,
+      players: [
+        { username: 'Steve', uuid: 'u-steve', isOnline: true, ping: 25, health: 20, food: 20, level: 30 }
+      ]
+    },
+    { 'x-agent-token': agentToken }
+  );
+  assert.strictEqual(telemetryRes.status, 200);
+  assert.strictEqual(telemetryRes.body.acknowledged, true);
+  console.log('  ✅ 10. Agent Telemetry: Sincronización telemétrica y de jugadores por HTTPS');
+
+  console.log('\n🎉 ¡Todas las 10 pruebas de integración pasaron con éxito (0 llamadas SSH)!\n');
 }
 
 run().catch(err => {

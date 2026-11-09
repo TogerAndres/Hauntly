@@ -3,7 +3,21 @@ const router = express.Router();
 const crypto = require('crypto');
 const db = require('../db');
 const { authenticateAgent } = require('../middleware/agentAuth');
+const { agentLimiter } = require('../middleware/rateLimiter');
 const { logAudit } = require('../services/auditService');
+
+router.use(agentLimiter);
+
+// 0. Public Ping / Connectivity Check (Allows installer and Agent to verify Render connectivity)
+router.get('/ping', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'MC-Desk Agent API',
+    cloud: 'render-ready',
+    version: '1.2.0',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // 1. Initial Agent Claim / Verification Handshake (Public with claimCode)
 router.post('/verify', async (req, res) => {
@@ -244,6 +258,39 @@ router.post('/command-result', authenticateAgent, async (req, res) => {
   } catch (err) {
     console.error('Error updating command result:', err);
     res.status(500).json({ error: 'Error al actualizar resultado de comando' });
+  }
+});
+
+// 4. Quick Poll for Pending Commands (Optional fast-loop alternative to telemetry)
+router.get('/commands', authenticateAgent, async (req, res) => {
+  const server = req.agentServer;
+  let pendingCommands = [];
+  try {
+    if (db.pool) {
+      const cmdRes = await db.query(
+        `SELECT id, command FROM server_commands 
+         WHERE server_id = $1 AND status = 'PENDING' 
+         ORDER BY created_at ASC LIMIT 5`,
+        [server.id]
+      );
+      pendingCommands = cmdRes.rows;
+      if (pendingCommands.length > 0) {
+        const ids = pendingCommands.map(c => c.id);
+        await db.query(`UPDATE server_commands SET status = 'SENT' WHERE id = ANY($1)`, [ids]);
+      }
+    } else {
+      if (!db.memoryStore.commands) db.memoryStore.commands = [];
+      pendingCommands = db.memoryStore.commands.filter(c => c.server_id === server.id && c.status === 'PENDING');
+      pendingCommands.forEach(c => (c.status = 'SENT'));
+      if (pendingCommands.length > 0) db.saveStore?.();
+    }
+
+    res.json({
+      commands: pendingCommands.map(c => ({ id: c.id, command: c.command }))
+    });
+  } catch (err) {
+    console.error('Error polling commands:', err);
+    res.status(500).json({ error: 'Error al consultar comandos pendientes' });
   }
 });
 

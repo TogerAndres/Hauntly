@@ -122,7 +122,7 @@ router.get('/:id', authenticate, async (req, res) => {
   const { id } = req.params;
 
   try {
-    const live = await minecraftBridge.fetchLiveServerData().catch(() => null);
+    const live = await minecraftBridge.fetchLiveServerData(id).catch(() => null);
     if (live && live.server) {
       return res.json({ server: live.server });
     }
@@ -149,7 +149,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // 4. Wake / Start Server
 router.post('/:id/wake', authenticate, async (req, res) => {
   try {
-    const result = await minecraftBridge.wakeRemoteServer();
+    const result = await minecraftBridge.wakeRemoteServer(req.params.id);
     await logAudit({
       serverId: req.params.id,
       userId: req.user.id,
